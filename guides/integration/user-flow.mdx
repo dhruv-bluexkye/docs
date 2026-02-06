@@ -1,0 +1,18 @@
+---
+title: 'User Login Flow'
+description: 'Authenticating users with 16TMS'
+---
+
+# User Login Flow
+
+Since 16TMS is a white-label solution, we don't manage user passwords. We map your users to our system via your internal ID.
+
+## Steps
+
+1.  **User logs in** to your app.
+2.  **Your Backend** calls `POST /v1/auth/login` with:
+    - `external_id`: Your unique user ID.
+    - `username`: Display name.
+    - `avatar`: URL to avatar.
+3.  **16TMS** responds with a `session_token`.
+4.  **Client** uses this token for subsequent requests (joining tournaments, etc.).
