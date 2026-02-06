@@ -57,15 +57,10 @@
               "api-reference/introduction"
             ]
           },
-          {
-            "group": "Endpoints",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
-          }
+           {
+        "group": "Endpoints",
+        "openapi": "api-reference/endpoint/openapi.json"
+      }
         ]
       }
     ],
