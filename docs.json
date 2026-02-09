@@ -57,10 +57,26 @@
               "api-reference/introduction"
             ]
           },
-           {
-        "group": "Endpoints",
-        "openapi": "api-reference/endpoint/openapi.json"
-      }
+          {
+            "group": "Games",
+            "openapi": "api-reference/games/openapi.json"
+          },
+          {
+            "group": "Maps",
+            "openapi": "api-reference/maps/openapi.json"
+          },
+          {
+            "group": "Teams",
+            "openapi": "api-reference/teams/openapi.json"
+          },
+          {
+            "group": "User Game IDs",
+            "openapi": "api-reference/user-game-ids/openapi.json"
+          },
+          {
+            "group": "Users",
+            "openapi": "api-reference/users/openapi.json"
+          }
         ]
       }
     ],

@@ -1,0 +1,519 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "User Game IDs",
+        "version": "1.0.0",
+        "description": "API endpoints for managing user game ID mappings in the 16TMS platform"
+    },
+    "servers": [
+        {
+            "url": "https://api.16tms.com/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/external/user-game-ids": {
+            "get": {
+                "summary": "Get user game IDs",
+                "description": "Retrieves user game IDs by external user ID. Optionally filter by game ID.",
+                "operationId": "getUserGameIds",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "description": "External user ID to retrieve game IDs for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "user_123"
+                    },
+                    {
+                        "name": "gameId",
+                        "in": "query",
+                        "description": "Optional game filter. Returns all game IDs if omitted.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User game IDs retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetUserGameIdsResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "User game IDs retrieved successfully",
+                                    "data": [
+                                        {
+                                            "gameId": "de578779-61ec-4425-8e13-5b61971bd353",
+                                            "gameName": "test",
+                                            "gameImage": "https://metaninzamedia.blob.core.windows.net/media/games/20260209111206_8be0463e43471d299608f26d92555064.webp",
+                                            "coverImage": "",
+                                            "userGameId": "lol"
+                                        }
+                                    ],
+                                    "meta": {
+                                        "traceId": "00-0b9a33deb55060719389707d91fe66e4-39ac3a60dea035aa-00",
+                                        "elapsedMs": 5.2,
+                                        "serverTimestamp": "2026-02-09T11:42:53.9323654Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create user game ID mapping",
+                "description": "Creates a new game ID mapping for a user.",
+                "operationId": "createUserGameId",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "description": "External user ID to create game ID mapping for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "user_123"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserGameIdRequest"
+                            },
+                            "example": {
+                                "gameId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                                "userGameId": "player123"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User game ID mapping created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserGameIdResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "User game ID mapping created successfully",
+                                    "data": {
+                                        "gameId": "de578779-61ec-4425-8e13-5b61971bd353",
+                                        "gameName": "test",
+                                        "gameImage": "https://metaninzamedia.blob.core.windows.net/media/games/20260209111206_8be0463e43471d299608f26d92555064.webp",
+                                        "coverImage": "",
+                                        "userGameId": "lol"
+                                    },
+                                    "meta": {
+                                        "traceId": "00-0b9a33deb55060719389707d91fe66e4-39ac3a60dea035aa-00",
+                                        "elapsedMs": 8.5,
+                                        "serverTimestamp": "2026-02-09T11:42:53.9323654Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - Invalid input data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - Game ID mapping already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update user game ID mapping",
+                "description": "Updates an existing game ID mapping for a user.",
+                "operationId": "updateUserGameId",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "description": "External user ID to update game ID mapping for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "user_123"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserGameIdRequest"
+                            },
+                            "example": {
+                                "gameId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                                "userGameId": "player456"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User game ID mapping updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserGameIdResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "User game ID updated successfully",
+                                    "data": {
+                                        "gameId": "de578779-61ec-4425-8e13-5b61971bd353",
+                                        "gameName": "test",
+                                        "gameImage": "https://metaninzamedia.blob.core.windows.net/media/games/20260209111206_8be0463e43471d299608f26d92555064.webp",
+                                        "coverImage": "",
+                                        "userGameId": "lol"
+                                    },
+                                    "meta": {
+                                        "traceId": "00-0b9a33deb55060719389707d91fe66e4-39ac3a60dea035aa-00",
+                                        "elapsedMs": 7.8,
+                                        "serverTimestamp": "2026-02-09T11:42:53.9323654Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - Invalid input data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found - Game ID mapping does not exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY",
+                "description": "API key for authentication. You can generate this from the 16TMS console."
+            }
+        },
+        "schemas": {
+            "UserGameIdRequest": {
+                "type": "object",
+                "required": [
+                    "gameId",
+                    "userGameId"
+                ],
+                "properties": {
+                    "gameId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID of the game",
+                        "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                    },
+                    "userGameId": {
+                        "type": "string",
+                        "description": "User's in-game ID for the specified game",
+                        "example": "player123"
+                    }
+                }
+            },
+            "UserGameIdData": {
+                "type": "object",
+                "properties": {
+                    "gameId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID of the game",
+                        "example": "de578779-61ec-4425-8e13-5b61971bd353"
+                    },
+                    "gameName": {
+                        "type": "string",
+                        "description": "Name of the game",
+                        "example": "test"
+                    },
+                    "gameImage": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the game's image",
+                        "example": "https://metaninzamedia.blob.core.windows.net/media/games/20260209111206_8be0463e43471d299608f26d92555064.webp"
+                    },
+                    "coverImage": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the game's cover image",
+                        "example": ""
+                    },
+                    "userGameId": {
+                        "type": "string",
+                        "description": "User's in-game ID for the specified game",
+                        "example": "lol"
+                    }
+                }
+            },
+            "GetUserGameIdsResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation",
+                        "example": "User game IDs retrieved successfully"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "List of user game ID mappings",
+                        "items": {
+                            "$ref": "#/components/schemas/UserGameIdData"
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-0b9a33deb55060719389707d91fe66e4-39ac3a60dea035aa-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds",
+                                "example": 5.2
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated",
+                                "example": "2026-02-09T11:42:53.9323654Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "UserGameIdResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation",
+                        "example": "User game ID mapping created successfully"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/UserGameIdData"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-0b9a33deb55060719389707d91fe66e4-39ac3a60dea035aa-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds",
+                                "example": 8.5
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated",
+                                "example": "2026-02-09T11:42:53.9323654Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Error message describing what went wrong",
+                        "example": "Invalid API key"
+                    },
+                    "errors": {
+                        "type": "array",
+                        "description": "Detailed error information",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string",
+                                    "description": "The field that caused the error",
+                                    "example": "gameId"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "Description of the error",
+                                    "example": "This field is required"
+                                }
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes"
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the error occurred"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

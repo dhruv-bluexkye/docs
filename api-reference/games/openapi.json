@@ -1,0 +1,572 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Games",
+        "version": "1.0.0",
+        "description": "API endpoints for managing games in the 16TMS platform"
+    },
+    "servers": [
+        {
+            "url": "https://api.16tms.com/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/games": {
+            "get": {
+                "summary": "Get all games",
+                "description": "Retrieves a paginated list of all games available in the 16TMS platform.",
+                "operationId": "getGames",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "PageNumber",
+                        "in": "query",
+                        "description": "The page number to retrieve (1-indexed)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1,
+                            "minimum": 1
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "PageSize",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10,
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "example": 10
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Games retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetGamesResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Games retrieved successfully",
+                                    "data": {
+                                        "games": [
+                                            {
+                                                "id": "de578779-61ec-4425-8e13-5b61971bd353",
+                                                "name": "test",
+                                                "description": "dsf",
+                                                "shortName": "test",
+                                                "region": "Global",
+                                                "developer": "",
+                                                "publisher": "",
+                                                "platForm": "Android/iOS",
+                                                "genre": "",
+                                                "image": "https://metaninzamedia.blob.core.windows.net/media/games/20260209111206_8be0463e43471d299608f26d92555064.webp",
+                                                "coverImage": "",
+                                                "uidPlaceholder": "Enter UID",
+                                                "mapCount": 0
+                                            }
+                                        ],
+                                        "totalCount": 1,
+                                        "pageNumber": 1,
+                                        "pageSize": 10,
+                                        "totalPages": 1
+                                    },
+                                    "meta": {
+                                        "traceId": "00-8340d7d724284b1e5036a4b43ce2b1ed-adcf19d2092cb268-00",
+                                        "elapsedMs": 2.73,
+                                        "serverTimestamp": "2026-02-09T11:12:15.9163903Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/games/{gameId}": {
+            "get": {
+                "summary": "Get game by ID",
+                "description": "Retrieves detailed information about a specific game by its unique identifier.",
+                "operationId": "getGameById",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "gameId",
+                        "in": "path",
+                        "description": "The unique identifier of the game",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "example": "de578779-61ec-4425-8e13-5b61971bd353"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Game retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetGameByIdResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Game retrieved successfully",
+                                    "data": {
+                                        "id": "de578779-61ec-4425-8e13-5b61971bd353",
+                                        "name": "test",
+                                        "description": "dsf",
+                                        "shortName": "test",
+                                        "region": "Global",
+                                        "developer": "",
+                                        "publisher": "",
+                                        "platForm": "Android/iOS",
+                                        "genre": "",
+                                        "image": "https://metaninzamedia.blob.core.windows.net/media/games/20260209111206_8be0463e43471d299608f26d92555064.webp",
+                                        "coverImage": "",
+                                        "uidPlaceholder": "Enter UID",
+                                        "mapCount": 0
+                                    },
+                                    "meta": {
+                                        "traceId": "00-8340d7d724284b1e5036a4b43ce2b1ed-adcf19d2092cb268-00",
+                                        "elapsedMs": 1.85,
+                                        "serverTimestamp": "2026-02-09T11:12:15.9163903Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Game not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "success": false,
+                                    "message": "Game not found",
+                                    "meta": {
+                                        "traceId": "00-8340d7d724284b1e5036a4b43ce2b1ed-adcf19d2092cb268-00",
+                                        "serverTimestamp": "2026-02-09T11:12:15.9163903Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY",
+                "description": "API key for authentication. You can generate this from the 16TMS console."
+            }
+        },
+        "schemas": {
+            "Game": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Unique identifier for the game",
+                        "example": "de578779-61ec-4425-8e13-5b61971bd353"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Full name of the game",
+                        "example": "PUBG Mobile"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Detailed description of the game",
+                        "example": "Battle royale game for mobile devices"
+                    },
+                    "shortName": {
+                        "type": "string",
+                        "description": "Short name or abbreviation of the game",
+                        "example": "PUBGM"
+                    },
+                    "region": {
+                        "type": "string",
+                        "description": "Region where the game is available",
+                        "example": "Global"
+                    },
+                    "developer": {
+                        "type": "string",
+                        "description": "Game developer name",
+                        "example": "Krafton"
+                    },
+                    "publisher": {
+                        "type": "string",
+                        "description": "Game publisher name",
+                        "example": "Tencent Games"
+                    },
+                    "platForm": {
+                        "type": "string",
+                        "description": "Platform(s) where the game is available",
+                        "example": "Android/iOS"
+                    },
+                    "genre": {
+                        "type": "string",
+                        "description": "Game genre or category",
+                        "example": "Battle Royale"
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the game's main image",
+                        "example": "https://metaninzamedia.blob.core.windows.net/media/games/20260209111206_8be0463e43471d299608f26d92555064.webp"
+                    },
+                    "coverImage": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the game's cover image",
+                        "example": "https://example.com/cover.jpg"
+                    },
+                    "uidPlaceholder": {
+                        "type": "string",
+                        "description": "Placeholder text for user ID input field",
+                        "example": "Enter UID"
+                    },
+                    "mapCount": {
+                        "type": "integer",
+                        "description": "Number of maps available for the game",
+                        "example": 0
+                    }
+                }
+            },
+            "PaginationData": {
+                "type": "object",
+                "properties": {
+                    "totalCount": {
+                        "type": "integer",
+                        "description": "Total number of items across all pages",
+                        "example": 1
+                    },
+                    "pageNumber": {
+                        "type": "integer",
+                        "description": "Current page number",
+                        "example": 1
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "description": "Number of items per page",
+                        "example": 10
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "description": "Total number of pages available",
+                        "example": 1
+                    }
+                }
+            },
+            "GetGamesResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation",
+                        "example": "Games retrieved successfully"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "games": {
+                                "type": "array",
+                                "description": "List of games",
+                                "items": {
+                                    "$ref": "#/components/schemas/Game"
+                                }
+                            },
+                            "totalCount": {
+                                "type": "integer",
+                                "description": "Total number of games across all pages",
+                                "example": 1
+                            },
+                            "pageNumber": {
+                                "type": "integer",
+                                "description": "Current page number",
+                                "example": 1
+                            },
+                            "pageSize": {
+                                "type": "integer",
+                                "description": "Number of items per page",
+                                "example": 10
+                            },
+                            "totalPages": {
+                                "type": "integer",
+                                "description": "Total number of pages available",
+                                "example": 1
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-8340d7d724284b1e5036a4b43ce2b1ed-adcf19d2092cb268-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds",
+                                "example": 2.73
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated",
+                                "example": "2026-02-09T11:12:15.9163903Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "GetGameByIdResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation",
+                        "example": "Game retrieved successfully"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/Game"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-8340d7d724284b1e5036a4b43ce2b1ed-adcf19d2092cb268-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds",
+                                "example": 1.85
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated",
+                                "example": "2026-02-09T11:12:15.9163903Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "GetGameMapsResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation",
+                        "example": "Game maps retrieved successfully"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "List of maps for the game",
+                        "items": {
+                            "$ref": "#/components/schemas/GameMap"
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-76b6d78f0dd1693ba67e7f5a26736404-a470a9ce3a7b0887-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds",
+                                "example": 0.85
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated",
+                                "example": "2026-02-09T11:21:55.7491824Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "GetMapByIdResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation",
+                        "example": "Operation completed successfully"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/GameMap"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-3917e9cecb1b1aec630750ab7ad5b91f-4609be949b0aaa4f-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds",
+                                "example": 10.33
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated",
+                                "example": "2026-02-09T11:22:27.3649351Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Error message describing what went wrong",
+                        "example": "Invalid API key"
+                    },
+                    "errors": {
+                        "type": "array",
+                        "description": "Detailed error information",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string",
+                                    "description": "The field that caused the error",
+                                    "example": "gameId"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "Description of the error",
+                                    "example": "Invalid game ID format"
+                                }
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes"
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the error occurred"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,357 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Teams",
+        "version": "1.0.0",
+        "description": "API endpoints for managing teams in the 16TMS platform"
+    },
+    "servers": [
+        {
+            "url": "https://api.16tms.com/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/teams": {
+            "post": {
+                "summary": "Create a new team",
+                "description": "Creates a new team in the 16TMS platform with the provided details.",
+                "operationId": "createTeam",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "description": "External identifier for the team from your system",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "team_123"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTeamRequest"
+                            },
+                            "example": {
+                                "name": "Team Alpha",
+                                "logo": "https://example.com/logo.png",
+                                "coverImage": "https://example.com/cover.jpg",
+                                "description": "Professional esports team",
+                                "gameId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Team created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateTeamResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Team created successfully",
+                                    "data": {
+                                        "teamId": "72241a59-3638-4c7c-8105-81774de2c900",
+                                        "externalId": "team_123",
+                                        "name": "Team Alpha",
+                                        "logo": "https://example.com/logo.png",
+                                        "coverImage": "https://example.com/cover.jpg",
+                                        "description": "Professional esports team",
+                                        "gameId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                                    },
+                                    "meta": {
+                                        "traceId": "00-0b9a33deb55060719389707d91fe66e4-39ac3a60dea035aa-00",
+                                        "elapsedMs": 12.5,
+                                        "serverTimestamp": "2026-02-09T11:39:15.9323654Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - Invalid input data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - Business rule violation (e.g., game account not linked)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BusinessRuleErrorResponse"
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": {
+                                        "code": "BUSINESS_RULE_VIOLATION",
+                                        "message": "Link your game account to create team"
+                                    },
+                                    "meta": {
+                                        "traceId": "00-861ab230a64e2191f50b84e76e901a09-c031a9c74a1a91ad-00"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY",
+                "description": "API key for authentication. You can generate this from the 16TMS console."
+            }
+        },
+        "schemas": {
+            "CreateTeamRequest": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "gameId"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the team",
+                        "example": "Team Alpha"
+                    },
+                    "logo": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the team's logo image",
+                        "example": "https://example.com/logo.png"
+                    },
+                    "coverImage": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the team's cover image",
+                        "example": "https://example.com/cover.jpg"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the team",
+                        "example": "Professional esports team"
+                    },
+                    "gameId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID of the game this team is associated with",
+                        "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                    }
+                }
+            },
+            "Team": {
+                "type": "object",
+                "properties": {
+                    "teamId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Unique identifier for the team in 16TMS",
+                        "example": "72241a59-3638-4c7c-8105-81774de2c900"
+                    },
+                    "externalId": {
+                        "type": "string",
+                        "description": "External identifier for the team",
+                        "example": "team_123"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the team",
+                        "example": "Team Alpha"
+                    },
+                    "logo": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the team's logo image",
+                        "example": "https://example.com/logo.png"
+                    },
+                    "coverImage": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the team's cover image",
+                        "example": "https://example.com/cover.jpg"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the team",
+                        "example": "Professional esports team"
+                    },
+                    "gameId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID of the game this team is associated with",
+                        "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                    }
+                }
+            },
+            "CreateTeamResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation",
+                        "example": "Team created successfully"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/Team"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-0b9a33deb55060719389707d91fe66e4-39ac3a60dea035aa-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds",
+                                "example": 12.5
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated",
+                                "example": "2026-02-09T11:39:15.9323654Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "BusinessRuleErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": false
+                    },
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string",
+                                "description": "Error code identifying the type of business rule violation",
+                                "example": "BUSINESS_RULE_VIOLATION"
+                            },
+                            "message": {
+                                "type": "string",
+                                "description": "Human-readable error message",
+                                "example": "Link your game account to create team"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-861ab230a64e2191f50b84e76e901a09-c031a9c74a1a91ad-00"
+                            }
+                        }
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Error message describing what went wrong",
+                        "example": "Invalid API key"
+                    },
+                    "errors": {
+                        "type": "array",
+                        "description": "Detailed error information",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string",
+                                    "description": "The field that caused the error",
+                                    "example": "name"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "Description of the error",
+                                    "example": "This field is required"
+                                }
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes"
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the error occurred"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

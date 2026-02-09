@@ -1,0 +1,279 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Users",
+        "version": "1.0.0",
+        "description": "API endpoints for managing users in the 16TMS platform"
+    },
+    "servers": [
+        {
+            "url": "https://api.16tms.com/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/external/users": {
+            "post": {
+                "summary": "Register a new user",
+                "description": "Creates or updates a user in the 16TMS platform using an external identifier. If the user already exists, their information will be updated.",
+                "operationId": "registerUser",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterUserRequest"
+                            },
+                            "example": {
+                                "externalId": "user_123",
+                                "displayName": "John Doe",
+                                "email": "user@example.com"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegisterUserResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "User registered successfully",
+                                    "data": {
+                                        "userId": "72241a59-3638-4c7c-8105-81774de2c900",
+                                        "externalId": "user_123",
+                                        "isNewUser": true,
+                                        "username": "user_123"
+                                    },
+                                    "meta": {
+                                        "traceId": "00-0b9a33deb55060719389707d91fe66e4-39ac3a60dea035aa-00",
+                                        "elapsedMs": 8.42,
+                                        "serverTimestamp": "2026-02-09T06:07:53.9323654Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - Invalid input data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY",
+                "description": "API key for authentication. You can generate this from the 16TMS console."
+            }
+        },
+        "schemas": {
+            "RegisterUserRequest": {
+                "type": "object",
+                "required": [
+                    "externalId",
+                    "displayName"
+                ],
+                "properties": {
+                    "externalId": {
+                        "type": "string",
+                        "description": "The unique identifier for the user from your external system.",
+                        "example": "user_123"
+                    },
+                    "displayName": {
+                        "type": "string",
+                        "description": "The display name for the user.",
+                        "example": "John Doe"
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "The username for the user.",
+                        "example": "johndoe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "The email address of the user.",
+                        "example": "user@example.com"
+                    },
+                    "phoneNumber": {
+                        "type": "string",
+                        "description": "The phone number of the user.",
+                        "example": "+1234567890"
+                    },
+                    "countryCode": {
+                        "type": "string",
+                        "description": "The country code for the phone number.",
+                        "example": "+1"
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the user's profile image.",
+                        "example": "https://example.com/images/profile.jpg"
+                    },
+                    "coverImage": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the user's cover image.",
+                        "example": "https://example.com/images/cover.jpg"
+                    }
+                }
+            },
+            "RegisterUserResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful.",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation.",
+                        "example": "User registered successfully"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "userId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "description": "The unique identifier assigned to the user in 16TMS.",
+                                "example": "72241a59-3638-4c7c-8105-81774de2c900"
+                            },
+                            "externalId": {
+                                "type": "string",
+                                "description": "The external identifier provided in the request.",
+                                "example": "user_123"
+                            },
+                            "isNewUser": {
+                                "type": "boolean",
+                                "description": "Indicates whether this is a newly created user or an existing user that was updated.",
+                                "example": true
+                            },
+                            "username": {
+                                "type": "string",
+                                "description": "The username of the user.",
+                                "example": "user_123"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes.",
+                                "example": "00-0b9a33deb55060719389707d91fe66e4-39ac3a60dea035aa-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds.",
+                                "example": 8.42
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated.",
+                                "example": "2026-02-09T06:07:53.9323654Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful.",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Error message describing what went wrong.",
+                        "example": "Invalid API key"
+                    },
+                    "errors": {
+                        "type": "array",
+                        "description": "Detailed error information.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string",
+                                    "description": "The field that caused the error.",
+                                    "example": "externalId"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "Description of the error.",
+                                    "example": "This field is required"
+                                }
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes."
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the error occurred."
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

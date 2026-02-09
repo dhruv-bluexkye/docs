@@ -1,33 +1,93 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'API Reference for 16TMS Platform Integration'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Welcome to 16TMS API
 
-## Welcome
+The 16TMS API allows you to integrate tournament management functionality into your application. This API enables you to manage users, tournaments, participants, matches, and more.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Base URL
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+All API requests should be made to:
+
+```
+https://api.16tms.com/api/v1
+```
+
+For local development or testing, you may use your own server URL.
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints require authentication using an API key. You need to include your API key in the request header.
+
+### API Key Authentication
+
+Include your API key in the `X-API-KEY` header with every request:
+
+```bash
+curl -X 'POST' \
+  'https://api.16tms.com/api/v1/external/users' \
+  -H 'accept: application/json' \
+  -H 'X-API-KEY: your-api-key' \
+  -H 'Content-Type: application/json'
+```
+
+<Warning>
+  Keep your API key secure and never expose it in client-side code. Generate your API key from the [16TMS Console](https://console.16tms.com).
+</Warning>
+
+## Response Format
+
+All API responses follow a consistent format:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
+{
+  "success": true,
+  "message": "Operation completed successfully",
+  "data": {
+    // Response data
+  },
+  "meta": {
+    "traceId": "unique-trace-id",
+    "elapsedMs": 10.5,
+    "serverTimestamp": "2026-02-09T06:07:53.9323654Z"
   }
-]
+}
 ```
+
+### Response Fields
+
+- **success**: Boolean indicating if the request was successful
+- **message**: Human-readable message describing the result
+- **data**: The actual response data (varies by endpoint)
+- **meta**: Metadata about the request including trace ID, elapsed time, and server timestamp
+
+## Error Handling
+
+When an error occurs, the API returns an appropriate HTTP status code along with error details:
+
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "errors": [
+    {
+      "field": "fieldName",
+      "message": "Specific error message"
+    }
+  ],
+  "meta": {
+    "traceId": "unique-trace-id",
+    "serverTimestamp": "2026-02-09T06:07:53.9323654Z"
+  }
+}
+```
+
+### Common HTTP Status Codes
+
+- **200**: Success
+- **400**: Bad Request - Invalid input data
+- **401**: Unauthorized - Invalid or missing API key
+- **404**: Not Found - Resource doesn't exist
+- **500**: Internal Server Error

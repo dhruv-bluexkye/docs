@@ -1,0 +1,390 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Maps",
+        "version": "1.0.0",
+        "description": "API endpoints for managing game maps in the 16TMS platform"
+    },
+    "servers": [
+        {
+            "url": "https://api.16tms.com/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/games/{gameId}/maps": {
+            "get": {
+                "summary": "Get maps for a game",
+                "description": "Retrieves all maps available for a specific game.",
+                "operationId": "getGameMaps",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "gameId",
+                        "in": "path",
+                        "description": "The unique identifier of the game",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "example": "de578779-61ec-4425-8e13-5b61971bd353"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Game maps retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetGameMapsResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Game maps retrieved successfully",
+                                    "data": [
+                                        {
+                                            "id": "c8c3997e-c4f0-4813-a27f-36b845c74196",
+                                            "name": "asdad",
+                                            "description": "asdad",
+                                            "imageUrl": "none",
+                                            "coverImage": "none",
+                                            "size": null,
+                                            "layout": null,
+                                            "gameId": "de578779-61ec-4425-8e13-5b61971bd353"
+                                        }
+                                    ],
+                                    "meta": {
+                                        "traceId": "00-76b6d78f0dd1693ba67e7f5a26736404-a470a9ce3a7b0887-00",
+                                        "elapsedMs": 0.85,
+                                        "serverTimestamp": "2026-02-09T11:21:55.7491824Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Game not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game-maps/{mapId}": {
+            "get": {
+                "summary": "Get map by ID",
+                "description": "Retrieves detailed information about a specific game map by its unique identifier.",
+                "operationId": "getMapById",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "mapId",
+                        "in": "path",
+                        "description": "The unique identifier of the map",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "example": "c8c3997e-c4f0-4813-a27f-36b845c74196"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Map retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetMapByIdResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Operation completed successfully",
+                                    "data": {
+                                        "id": "c8c3997e-c4f0-4813-a27f-36b845c74196",
+                                        "name": "asdad",
+                                        "description": "asdad",
+                                        "imageUrl": "none",
+                                        "coverImage": "none",
+                                        "size": null,
+                                        "layout": null,
+                                        "gameId": "de578779-61ec-4425-8e13-5b61971bd353"
+                                    },
+                                    "meta": {
+                                        "traceId": "00-3917e9cecb1b1aec630750ab7ad5b91f-4609be949b0aaa4f-00",
+                                        "elapsedMs": 10.33,
+                                        "serverTimestamp": "2026-02-09T11:22:27.3649351Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Map not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY",
+                "description": "API key for authentication. You can generate this from the 16TMS console."
+            }
+        },
+        "schemas": {
+            "GameMap": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Unique identifier for the map",
+                        "example": "c8c3997e-c4f0-4813-a27f-36b845c74196"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the map",
+                        "example": "Erangel"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the map",
+                        "example": "Classic battle royale map"
+                    },
+                    "imageUrl": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the map's image",
+                        "example": "https://example.com/map.jpg",
+                        "nullable": true
+                    },
+                    "coverImage": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the map's cover image",
+                        "example": "https://example.com/cover.jpg",
+                        "nullable": true
+                    },
+                    "size": {
+                        "type": "string",
+                        "description": "Size of the map (e.g., 8x8 km)",
+                        "example": "8x8",
+                        "nullable": true
+                    },
+                    "layout": {
+                        "type": "string",
+                        "description": "Layout type of the map",
+                        "example": "Island",
+                        "nullable": true
+                    },
+                    "gameId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID of the game this map belongs to",
+                        "example": "de578779-61ec-4425-8e13-5b61971bd353"
+                    }
+                }
+            },
+            "GetGameMapsResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation",
+                        "example": "Game maps retrieved successfully"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "List of maps for the game",
+                        "items": {
+                            "$ref": "#/components/schemas/GameMap"
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-76b6d78f0dd1693ba67e7f5a26736404-a470a9ce3a7b0887-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds",
+                                "example": 0.85
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated",
+                                "example": "2026-02-09T11:21:55.7491824Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "GetMapByIdResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation",
+                        "example": "Operation completed successfully"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/GameMap"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-3917e9cecb1b1aec630750ab7ad5b91f-4609be949b0aaa4f-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds",
+                                "example": 10.33
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated",
+                                "example": "2026-02-09T11:22:27.3649351Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Error message describing what went wrong",
+                        "example": "Invalid API key"
+                    },
+                    "errors": {
+                        "type": "array",
+                        "description": "Detailed error information",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string",
+                                    "description": "The field that caused the error",
+                                    "example": "mapId"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "Description of the error",
+                                    "example": "Invalid map ID format"
+                                }
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes"
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the error occurred"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
