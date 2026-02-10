@@ -137,6 +137,216 @@
                     }
                 }
             }
+        },
+        "/teams/me": {
+            "get": {
+                "summary": "Get my teams",
+                "description": "Retrieves all teams that the user is a member of. Optionally filter by game ID.",
+                "operationId": "getMyTeams",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "description": "External user ID to retrieve teams for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "user_123"
+                    },
+                    {
+                        "name": "gameId",
+                        "in": "query",
+                        "description": "Optional game filter. Returns teams for all games if omitted.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "example": "3b1dd428-f288-4654-beff-ae523005f47a"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Teams fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetMyTeamsResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Teams fetched successfully",
+                                    "data": [
+                                        {
+                                            "teamId": "f0ae597c-a8e9-455c-96ea-d54cf9e98c23",
+                                            "name": "dhruvvv",
+                                            "role": 1,
+                                            "isOwner": true,
+                                            "logo": "test",
+                                            "gameId": "3b1dd428-f288-4654-beff-ae523005f47a",
+                                            "gameName": "BGMI",
+                                            "gameImage": "https://metaninzamedia.blob.core.windows.net/media/games/20260209131841_8be0463e43471d299608f26d92555064.webp",
+                                            "joinedAt": "2026-02-09T13:22:47.392121Z",
+                                            "members": [
+                                                {
+                                                    "userId": "302cb943-26a3-40e1-92f4-216ac2b264d7",
+                                                    "email": "",
+                                                    "username": "dhruvpatel",
+                                                    "role": 1,
+                                                    "joinedAt": "2026-02-09T13:22:47.392121Z",
+                                                    "profileImage": null,
+                                                    "gameId": "3b1dd428-f288-4654-beff-ae523005f47a",
+                                                    "userGameId": "bossxdhruv"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "meta": {
+                                        "traceId": "00-30eb584edc33d3b3c6abc2f2a48d531b-c7db91fb01d98955-00",
+                                        "elapsedMs": 42.28,
+                                        "serverTimestamp": "2026-02-09T13:25:26.0306215Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teams/{teamId}": {
+            "get": {
+                "summary": "Get team by ID",
+                "description": "Retrieves detailed information about a specific team by its unique identifier.",
+                "operationId": "getTeamById",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "teamId",
+                        "in": "path",
+                        "description": "The unique identifier of the team",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "example": "f0ae597c-a8e9-455c-96ea-d54cf9e98c23"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Team retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetTeamByIdResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Team retrieved successfully",
+                                    "data": {
+                                        "teamId": "f0ae597c-a8e9-455c-96ea-d54cf9e98c23",
+                                        "name": "dhruvvv",
+                                        "role": 1,
+                                        "isOwner": true,
+                                        "logo": "test",
+                                        "gameId": "3b1dd428-f288-4654-beff-ae523005f47a",
+                                        "gameName": "BGMI",
+                                        "gameImage": "https://metaninzamedia.blob.core.windows.net/media/games/20260209131841_8be0463e43471d299608f26d92555064.webp",
+                                        "joinedAt": "2026-02-09T13:22:47.392121Z",
+                                        "members": [
+                                            {
+                                                "userId": "302cb943-26a3-40e1-92f4-216ac2b264d7",
+                                                "email": "",
+                                                "username": "dhruvpatel",
+                                                "role": 1,
+                                                "joinedAt": "2026-02-09T13:22:47.392121Z",
+                                                "profileImage": null,
+                                                "gameId": "3b1dd428-f288-4654-beff-ae523005f47a",
+                                                "userGameId": "bossxdhruv"
+                                            }
+                                        ]
+                                    },
+                                    "meta": {
+                                        "traceId": "00-30eb584edc33d3b3c6abc2f2a48d531b-c7db91fb01d98955-00",
+                                        "elapsedMs": 15.5,
+                                        "serverTimestamp": "2026-02-09T13:25:26.0306215Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Team not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -264,6 +474,200 @@
                                 "format": "date-time",
                                 "description": "Server timestamp when the response was generated",
                                 "example": "2026-02-09T11:39:15.9323654Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "TeamMember": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Unique identifier for the user",
+                        "example": "302cb943-26a3-40e1-92f4-216ac2b264d7"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Email address of the team member",
+                        "example": ""
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "Username of the team member",
+                        "example": "dhruvpatel"
+                    },
+                    "role": {
+                        "type": "integer",
+                        "description": "Role of the member in the team (1 = Owner, 2 = Admin, 3 = Member)",
+                        "example": 1
+                    },
+                    "joinedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp when the member joined the team",
+                        "example": "2026-02-09T13:22:47.392121Z"
+                    },
+                    "profileImage": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the member's profile image",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "gameId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID of the game",
+                        "example": "3b1dd428-f288-4654-beff-ae523005f47a"
+                    },
+                    "userGameId": {
+                        "type": "string",
+                        "description": "User's in-game ID",
+                        "example": "bossxdhruv"
+                    }
+                }
+            },
+            "TeamWithMembers": {
+                "type": "object",
+                "properties": {
+                    "teamId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Unique identifier for the team",
+                        "example": "f0ae597c-a8e9-455c-96ea-d54cf9e98c23"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the team",
+                        "example": "dhruvvv"
+                    },
+                    "role": {
+                        "type": "integer",
+                        "description": "User's role in the team (1 = Owner, 2 = Admin, 3 = Member)",
+                        "example": 1
+                    },
+                    "isOwner": {
+                        "type": "boolean",
+                        "description": "Indicates if the user is the owner of the team",
+                        "example": true
+                    },
+                    "logo": {
+                        "type": "string",
+                        "description": "URL to the team's logo",
+                        "example": "test"
+                    },
+                    "gameId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID of the game this team is associated with",
+                        "example": "3b1dd428-f288-4654-beff-ae523005f47a"
+                    },
+                    "gameName": {
+                        "type": "string",
+                        "description": "Name of the game",
+                        "example": "BGMI"
+                    },
+                    "gameImage": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to the game's image",
+                        "example": "https://metaninzamedia.blob.core.windows.net/media/games/20260209131841_8be0463e43471d299608f26d92555064.webp"
+                    },
+                    "joinedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp when the user joined the team",
+                        "example": "2026-02-09T13:22:47.392121Z"
+                    },
+                    "members": {
+                        "type": "array",
+                        "description": "List of team members",
+                        "items": {
+                            "$ref": "#/components/schemas/TeamMember"
+                        }
+                    }
+                }
+            },
+            "GetMyTeamsResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation",
+                        "example": "Teams fetched successfully"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "List of teams the user is a member of",
+                        "items": {
+                            "$ref": "#/components/schemas/TeamWithMembers"
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-30eb584edc33d3b3c6abc2f2a48d531b-c7db91fb01d98955-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds",
+                                "example": 42.28
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated",
+                                "example": "2026-02-09T13:25:26.0306215Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "GetTeamByIdResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation",
+                        "example": "Team retrieved successfully"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/TeamWithMembers"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes",
+                                "example": "00-30eb584edc33d3b3c6abc2f2a48d531b-c7db91fb01d98955-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds",
+                                "example": 15.5
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated",
+                                "example": "2026-02-09T13:25:26.0306215Z"
                             }
                         }
                     }

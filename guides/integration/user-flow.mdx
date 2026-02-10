@@ -1,18 +1,33 @@
 ---
-title: 'User Login Flow'
-description: 'Authenticating users with 16TMS'
+title: 'User Creation Flow'
+description: 'Syncing your users with 16TMS'
 ---
 
-# User Login Flow
+16TMS is designed to integrate seamlessly with your existing user management system. Instead of requiring users to create separate accounts, you map your existing users to 16TMS using your own unique identifiers.
 
-Since 16TMS is a white-label solution, we don't manage user passwords. We map your users to our system via your internal ID.
+## Workflow
 
-## Steps
+1.  **User Registration**: The user registers or signs up on your platform (your backend).
+2.  **Generate & Store Identifier**: Your backend generates a unique `externalId` for this user and saves it in your database.
+3.  **Sync with 16TMS**: Your backend immediately calls the 16TMS API using this `externalId` along with other user details (like username, avatar).
+    *   This is done via the **[Register a new user](/api-reference/register-a-new-user)** endpoint.
+    *   You must include your `X-API-KEY` in the header for authentication.
+4.  **Subsequent Access**: For all future API requests related to this user (e.g., joining tournaments, fetching matches), you will use:
+    *   Your **API Key** (for authorization).
+    *   The **External ID** (the unique token/ID you generated) to identify the specific user.
 
-1.  **User logs in** to your app.
-2.  **Your Backend** calls `POST /v1/auth/login` with:
-    - `external_id`: Your unique user ID.
-    - `username`: Display name.
-    - `avatar`: URL to avatar.
-3.  **16TMS** responds with a `session_token`.
-4.  **Client** uses this token for subsequent requests (joining tournaments, etc.).
+## Flowchart
+
+```mermaid
+graph TD
+    A[User Registers on Client] --> B[Partner Backend]
+    B --> C[Generate & Store External ID]
+    C --> D[Call 16TMS API with ID + Details]
+    D --> E[User Created in 16TMS]
+```
+
+## api-reference
+
+<Card title="Register a new user" icon="user-plus" href="/api-reference/register-a-new-user">
+  Create or update a user profile in 16TMS using your external specific ID.
+</Card>

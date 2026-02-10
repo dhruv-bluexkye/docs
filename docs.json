@@ -43,7 +43,8 @@
             "group": "Integration Guide",
             "pages": [
               "guides/integration/user-flow",
-              "guides/integration/tournament-flow"
+              "guides/integration/general-api-flow",
+              "guides/integration/tournament-registration"
             ]
           }
         ]
