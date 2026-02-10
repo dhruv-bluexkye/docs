@@ -22,22 +22,11 @@
           },
           {
             "group": "Getting Started",
-            "pages": [
-              "guides/getting-started/access-urls",
-              "guides/getting-started/first-tournament"
-            ]
+            "pages": []
           },
           {
             "group": "Console Guide",
-            "pages": [
-              "guides/console/games",
-              "guides/console/currency",
-              "guides/console/tournaments",
-              "guides/console/brackets",
-              "guides/console/groups",
-              "guides/console/api-keys",
-              "guides/console/participants"
-            ]
+            "pages": []
           },
           {
             "group": "Integration Guide",
