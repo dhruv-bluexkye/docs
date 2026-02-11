@@ -100,6 +100,198 @@
                     }
                 }
             }
+        },
+        "/external/users/{externalId}/profile": {
+            "get": {
+                "summary": "Get external user profile",
+                "description": "Retrieves the profile of a user using their external ID.",
+                "operationId": "getExternalUserProfile",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "externalId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The external ID of the user."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "External user profile retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetExternalUserProfileResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "External user profile retrieved successfully",
+                                    "data": {
+                                        "userId": "cbf66c47-a05a-457c-9d3f-322ddd04d79a",
+                                        "username": "test",
+                                        "displayName": "test",
+                                        "email": null,
+                                        "phoneNumber": null,
+                                        "countryCode": null,
+                                        "image": null,
+                                        "coverImage": null
+                                    },
+                                    "meta": {
+                                        "traceId": "00-99e813e28dd5cd61273e4687a8d65da6-746be5aedcf85cd2-00",
+                                        "elapsedMs": 10.71,
+                                        "serverTimestamp": "2026-02-11T05:49:31.5088635Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update external user profile",
+                "description": "Updates the profile of a user using their external ID.",
+                "operationId": "updateExternalUserProfile",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "externalId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The external ID of the user."
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateExternalUserProfileRequest"
+                            },
+                            "example": {
+                                "username": "dfs",
+                                "image": "strsdfsding",
+                                "coverImage": "stsdring",
+                                "displayName": "strsdfing"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "External user profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateExternalUserProfileResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "External user profile updated successfully",
+                                    "data": {
+                                        "userId": "cbf66c47-a05a-457c-9d3f-322ddd04d79a",
+                                        "username": "dfs",
+                                        "displayName": "strsdfing",
+                                        "email": null,
+                                        "phoneNumber": null,
+                                        "countryCode": null,
+                                        "image": "strsdfsding",
+                                        "coverImage": "stsdring"
+                                    },
+                                    "meta": {
+                                        "traceId": "00-97859db68592e8645706c63c94771e58-3f4d57a2024b84d4-00",
+                                        "elapsedMs": 42.43,
+                                        "serverTimestamp": "2026-02-11T05:50:42.6632964Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - Invalid input",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -269,6 +461,211 @@
                                 "type": "string",
                                 "format": "date-time",
                                 "description": "Server timestamp when the error occurred."
+                            }
+                        }
+                    }
+                }
+            },
+            "GetExternalUserProfileResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful.",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation.",
+                        "example": "External user profile retrieved successfully"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "userId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "description": "The unique identifier assigned to the user in 16TMS.",
+                                "example": "cbf66c47-a05a-457c-9d3f-322ddd04d79a"
+                            },
+                            "username": {
+                                "type": "string",
+                                "description": "The username of the user.",
+                                "example": "test"
+                            },
+                            "displayName": {
+                                "type": "string",
+                                "description": "The display name of the user.",
+                                "example": "test"
+                            },
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "description": "The email address of the user.",
+                                "nullable": true,
+                                "example": null
+                            },
+                            "phoneNumber": {
+                                "type": "string",
+                                "description": "The phone number of the user.",
+                                "nullable": true,
+                                "example": null
+                            },
+                            "countryCode": {
+                                "type": "string",
+                                "description": "The country code for the phone number.",
+                                "nullable": true,
+                                "example": null
+                            },
+                            "image": {
+                                "type": "string",
+                                "format": "uri",
+                                "description": "URL to the user's profile image.",
+                                "nullable": true,
+                                "example": null
+                            },
+                            "coverImage": {
+                                "type": "string",
+                                "format": "uri",
+                                "description": "URL to the user's cover image.",
+                                "nullable": true,
+                                "example": null
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes.",
+                                "example": "00-99e813e28dd5cd61273e4687a8d65da6-746be5aedcf85cd2-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds.",
+                                "example": 10.71
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated.",
+                                "example": "2026-02-11T05:49:31.5088635Z"
+                            }
+                        }
+                    }
+                }
+            },
+            "UpdateExternalUserProfileRequest": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "description": "The new username for the user.",
+                        "example": "dfs"
+                    },
+                    "displayName": {
+                        "type": "string",
+                        "description": "The new display name for the user.",
+                        "example": "strsdfing"
+                    },
+                    "image": {
+                        "type": "string",
+                        "description": "URL to the user's profile image.",
+                        "nullable": true,
+                        "example": "strsdfsding"
+                    },
+                    "coverImage": {
+                        "type": "string",
+                        "description": "URL to the user's cover image.",
+                        "nullable": true,
+                        "example": "stsdring"
+                    }
+                }
+            },
+            "UpdateExternalUserProfileResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the request was successful.",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "A message describing the result of the operation.",
+                        "example": "External user profile updated successfully"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "userId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "description": "The unique identifier assigned to the user in 16TMS.",
+                                "example": "cbf66c47-a05a-457c-9d3f-322ddd04d79a"
+                            },
+                            "username": {
+                                "type": "string",
+                                "description": "The username of the user.",
+                                "example": "dfs"
+                            },
+                            "displayName": {
+                                "type": "string",
+                                "description": "The display name of the user.",
+                                "example": "strsdfing"
+                            },
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "description": "The email address of the user.",
+                                "nullable": true,
+                                "example": null
+                            },
+                            "phoneNumber": {
+                                "type": "string",
+                                "description": "The phone number of the user.",
+                                "nullable": true,
+                                "example": null
+                            },
+                            "countryCode": {
+                                "type": "string",
+                                "description": "The country code for the phone number.",
+                                "nullable": true,
+                                "example": null
+                            },
+                            "image": {
+                                "type": "string",
+                                "description": "URL to the user's profile image.",
+                                "nullable": true,
+                                "example": "strsdfsding"
+                            },
+                            "coverImage": {
+                                "type": "string",
+                                "description": "URL to the user's cover image.",
+                                "nullable": true,
+                                "example": "stsdring"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string",
+                                "description": "Unique trace identifier for debugging purposes.",
+                                "example": "00-97859db68592e8645706c63c94771e58-3f4d57a2024b84d4-00"
+                            },
+                            "elapsedMs": {
+                                "type": "number",
+                                "description": "Time taken to process the request in milliseconds.",
+                                "example": 42.43
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Server timestamp when the response was generated.",
+                                "example": "2026-02-11T05:50:42.6632964Z"
                             }
                         }
                     }
