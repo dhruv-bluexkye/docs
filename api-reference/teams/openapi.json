@@ -20,7 +20,7 @@
         "/teams": {
             "post": {
                 "summary": "Create a new team",
-                "description": "Creates a new team in the 16TMS platform with the provided details.",
+                "description": "Creates a new team in the 16TMS platform with the provided details. Note: The user (externalId) must have a `userGameId` mapped for the specific `gameId` before creating a team. Refer to the [Create User Game ID Mapping](/api-reference/create-user-game-id-mapping) endpoint for details.",
                 "operationId": "createTeam",
                 "security": [
                     {
@@ -346,6 +346,739 @@
                         }
                     }
                 }
+            },
+            "put": {
+                "summary": "Update team",
+                "description": "Updates an existing team's information.",
+                "operationId": "updateTeam",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "teamId",
+                        "in": "path",
+                        "description": "The unique identifier of the team",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "example": "e86e814e-ca93-412e-b347-fb71837c6466"
+                    },
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "description": "External user ID for API key context",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTeamRequest"
+                            },
+                            "example": {
+                                "name": "boss official",
+                                "logo": "string",
+                                "coverImage": "string",
+                                "description": "string",
+                                "gameId": "8a7b084c-d30a-40e7-85e0-865164a9076b"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Team updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateTeamResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Team updated successfully",
+                                    "data": {
+                                        "teamId": "e86e814e-ca93-412e-b347-fb71837c6466",
+                                        "name": "boss official",
+                                        "description": "string",
+                                        "teamSize": 16,
+                                        "ownerId": "cbf66c47-a05a-457c-9d3f-322ddd04d79a",
+                                        "ownerName": "Dhruv",
+                                        "logo": "string",
+                                        "coverImage": "string",
+                                        "gameId": "8a7b084c-d30a-40e7-85e0-865164a9076b",
+                                        "gameName": "Counter Stirke",
+                                        "gameImage": "https://metaninzamedia.blob.core.windows.net/media/games/20260211055726_cs2.webp",
+                                        "members": [
+                                            {
+                                                "userId": "cbf66c47-a05a-457c-9d3f-322ddd04d79a",
+                                                "email": "",
+                                                "username": "dfs",
+                                                "role": 1,
+                                                "joinedAt": "2026-02-11T05:59:42.710198Z",
+                                                "profileImage": "strsdfsding",
+                                                "gameId": "8a7b084c-d30a-40e7-85e0-865164a9076b",
+                                                "userGameId": "Bossxdhruv"
+                                            }
+                                        ]
+                                    },
+                                    "meta": {
+                                        "traceId": "00-fb61aeecb9154e9e1f1ff1cf32324afc-135e8e98ffea0f69-00",
+                                        "elapsedMs": 19.47,
+                                        "serverTimestamp": "2026-02-11T06:00:13.9368803Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Team not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete team",
+                "description": "Deletes an existing team. This action cannot be undone.",
+                "operationId": "deleteTeam",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "teamId",
+                        "in": "path",
+                        "description": "The unique identifier of the team",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "example": "e86e814e-ca93-412e-b347-fb71837c6466"
+                    },
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "description": "External user ID for API key context (must be team owner)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Team deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteTeamResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Team deleted successfully",
+                                    "meta": {
+                                        "traceId": "00-fb61aeecb9154e9e1f1ff1cf32324afc-135e8e98ffea0f69-00",
+                                        "elapsedMs": 19.47,
+                                        "serverTimestamp": "2026-02-11T06:00:13.9368803Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Only team owner can delete team",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Team not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teams/{teamId}/members": {
+            "delete": {
+                "summary": "Remove member from team",
+                "description": "Removes a member from the team. Requires team owner privileges.",
+                "operationId": "removeTeamMember",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "teamId",
+                        "in": "path",
+                        "description": "The unique identifier of the team",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "example": "e86e814e-ca93-412e-b347-fb71837c6466"
+                    },
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "description": "External user ID of the team owner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "memberExternalId",
+                        "in": "query",
+                        "description": "External user ID of the member to maybe removed",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Member removed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RemoveTeamMemberResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Team member removed successfully",
+                                    "meta": {
+                                        "traceId": "00-fb61aeecb9154e9e1f1ff1cf32324afc-135e8e98ffea0f69-00",
+                                        "elapsedMs": 15.2,
+                                        "serverTimestamp": "2026-02-11T06:05:13.9368803Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Only team owner can remove members",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Team or member not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teams/{teamId}/invite": {
+            "get": {
+                "summary": "Get team invite link",
+                "description": "Generates an invite link for the team. Requires team owner privileges.",
+                "operationId": "getTeamInviteLink",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "teamId",
+                        "in": "path",
+                        "description": "The unique identifier of the team",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "example": "e86e814e-ca93-412e-b347-fb71837c6466"
+                    },
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "description": "External user ID of the team owner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invite link generated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetTeamInviteLinkResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Invite link generated successfully",
+                                    "data": {
+                                        "token": "tkMbY9BB9P"
+                                    },
+                                    "meta": {
+                                        "traceId": "00-f9a79e9bba66b2fe54ffde572478f919-f31eff2e67321aab-00",
+                                        "elapsedMs": 52.63,
+                                        "serverTimestamp": "2026-02-11T06:03:48.3110822Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Only team owner can generate invite link",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Team not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teams/invites/{token}": {
+            "get": {
+                "summary": "Get team invite preview",
+                "description": "Retrieves public information about a team using an invite token.",
+                "operationId": "getTeamInvitePreview",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "description": "The invite token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "description": "Optional external user ID to check if user can join (checks if already member)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Team preview fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetTeamInvitePreviewResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Team preview fetched successfully",
+                                    "data": {
+                                        "teamId": "e86e814e-ca93-412e-b347-fb71837c6466",
+                                        "name": "boss official",
+                                        "description": "string",
+                                        "logo": "string",
+                                        "coverImage": "string",
+                                        "teamSize": 16,
+                                        "currentMembers": 1,
+                                        "ownerName": "Dhruv",
+                                        "gameId": "8a7b084c-d30a-40e7-85e0-865164a9076b",
+                                        "gameName": "Counter Stirke",
+                                        "canJoin": false,
+                                        "joinError": "You are the team owner. You are already a member of this team."
+                                    },
+                                    "meta": {
+                                        "traceId": "00-284038cb0fcea24e1b38d617a989c586-f8a343ad22441e41-00",
+                                        "elapsedMs": 35.21,
+                                        "serverTimestamp": "2026-02-11T06:05:14.3237042Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Team or invite not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teams/invites/{token}/join": {
+            "post": {
+                "summary": "Join team via invite",
+                "description": "Joins a team using an invite token. Note: The user (externalId) must have a `userGameId` mapped for the team's `gameId` before joining. Refer to the [Create User Game ID Mapping](/api-reference/create-user-game-id-mapping) endpoint for details.",
+                "operationId": "joinTeamWithInvite",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "description": "The invite token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "description": "External user ID of the user joining the team",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully joined the team",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JoinTeamResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Successfully joined the team",
+                                    "data": {
+                                        "teamId": "e86e814e-ca93-412e-b347-fb71837c6466",
+                                        "name": "boss official",
+                                        "description": "string",
+                                        "teamSize": 16,
+                                        "ownerId": "cbf66c47-a05a-457c-9d3f-322ddd04d79a",
+                                        "ownerName": "Dhruv",
+                                        "logo": "string",
+                                        "coverImage": "string",
+                                        "gameId": "8a7b084c-d30a-40e7-85e0-865164a9076b",
+                                        "gameName": "Counter Stirke",
+                                        "gameImage": "https://metaninzamedia.blob.core.windows.net/media/games/20260211055726_cs2.webp",
+                                        "members": [
+                                            {
+                                                "userId": "cbf66c47-a05a-457c-9d3f-322ddd04d79a",
+                                                "email": "",
+                                                "username": "dfs",
+                                                "role": 1,
+                                                "joinedAt": "2026-02-11T05:59:42.710198Z",
+                                                "profileImage": "strsdfsding",
+                                                "gameId": "8a7b084c-d30a-40e7-85e0-865164a9076b",
+                                                "userGameId": "Bossxdhruv"
+                                            },
+                                            {
+                                                "userId": "165a759d-d243-4549-830d-bca932046245",
+                                                "email": "",
+                                                "username": "lol",
+                                                "role": 3,
+                                                "joinedAt": "2026-02-11T06:14:26.975106Z",
+                                                "profileImage": null,
+                                                "gameId": "8a7b084c-d30a-40e7-85e0-865164a9076b",
+                                                "userGameId": "est"
+                                            }
+                                        ]
+                                    },
+                                    "meta": {
+                                        "traceId": "00-d37a7cd8e29472edf762e86465e468e8-fb9607ab34703613-00",
+                                        "elapsedMs": 54.6,
+                                        "serverTimestamp": "2026-02-11T06:14:27.0253634Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Team or invite not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - Already a member or game account not linked",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BusinessRuleErrorResponse"
+                                },
+                                "examples": {
+                                    "alreadyMember": {
+                                        "summary": "Already a member",
+                                        "value": {
+                                            "success": false,
+                                            "error": {
+                                                "code": "BUSINESS_RULE_VIOLATION",
+                                                "message": "You are already a member of this team."
+                                            },
+                                            "meta": {
+                                                "traceId": "00-4cfc730c433e903baa76e4b24222c001-17cd11d4a1c2425d-00"
+                                            }
+                                        }
+                                    },
+                                    "gameAccountNotLinked": {
+                                        "summary": "Game account not linked",
+                                        "value": {
+                                            "success": false,
+                                            "error": {
+                                                "code": "BUSINESS_RULE_VIOLATION",
+                                                "message": "Link your game account to join team"
+                                            },
+                                            "meta": {
+                                                "traceId": "00-ac42ce53b9e64e82a5d5a4af5e1e92b5-67b16e9b5cdd25b0-00"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },
@@ -500,9 +1233,7 @@
                         "example": "dhruvpatel"
                     },
                     "role": {
-                        "type": "integer",
-                        "description": "Role of the member in the team (1 = Owner, 2 = Admin, 3 = Member)",
-                        "example": 1
+                        "$ref": "#/components/schemas/TeamRole"
                     },
                     "joinedAt": {
                         "type": "string",
@@ -545,9 +1276,7 @@
                         "example": "dhruvvv"
                     },
                     "role": {
-                        "type": "integer",
-                        "description": "User's role in the team (1 = Owner, 2 = Admin, 3 = Member)",
-                        "example": 1
+                        "$ref": "#/components/schemas/TeamRole"
                     },
                     "isOwner": {
                         "type": "boolean",
@@ -673,6 +1402,22 @@
                     }
                 }
             },
+            "TeamRole": {
+                "type": "integer",
+                "description": "Role of the member in the team (1 = Owner, 3 = Member)",
+                "enum": [
+                    1,
+                    3
+                ],
+                "x-enum-varnames": [
+                    "Owner",
+                    "Member"
+                ],
+                "x-enum-descriptions": [
+                    "Team Owner",
+                    "Team Member"
+                ]
+            },
             "BusinessRuleErrorResponse": {
                 "type": "object",
                 "properties": {
@@ -751,6 +1496,306 @@
                                 "type": "string",
                                 "format": "date-time",
                                 "description": "Server timestamp when the error occurred"
+                            }
+                        }
+                    }
+                }
+            },
+            "UpdateTeamRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the team"
+                    },
+                    "logo": {
+                        "type": "string",
+                        "description": "URL to the team's logo image",
+                        "nullable": true
+                    },
+                    "coverImage": {
+                        "type": "string",
+                        "description": "URL to the team's cover image",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the team",
+                        "nullable": true
+                    },
+                    "gameId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID of the game this team is associated with"
+                    }
+                }
+            },
+            "UpdatedTeamDetails": {
+                "type": "object",
+                "properties": {
+                    "teamId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "teamSize": {
+                        "type": "integer"
+                    },
+                    "ownerId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "ownerName": {
+                        "type": "string"
+                    },
+                    "logo": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "coverImage": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "gameId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "gameName": {
+                        "type": "string"
+                    },
+                    "gameImage": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "members": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TeamMember"
+                        }
+                    }
+                }
+            },
+            "UpdateTeamResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/UpdatedTeamDetails"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string"
+                            },
+                            "elapsedMs": {
+                                "type": "number"
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                }
+            },
+            "DeleteTeamResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string"
+                            },
+                            "elapsedMs": {
+                                "type": "number"
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                }
+            },
+            "RemoveTeamMemberResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string"
+                            },
+                            "elapsedMs": {
+                                "type": "number"
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                }
+            },
+            "GetTeamInviteLinkResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "token": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string"
+                            },
+                            "elapsedMs": {
+                                "type": "number"
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                }
+            },
+            "JoinTeamResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/TeamWithMembers"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string"
+                            },
+                            "elapsedMs": {
+                                "type": "number"
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                }
+            },
+            "GetTeamInvitePreviewResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "teamId": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "logo": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "coverImage": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "teamSize": {
+                                "type": "integer"
+                            },
+                            "currentMembers": {
+                                "type": "integer"
+                            },
+                            "ownerName": {
+                                "type": "string"
+                            },
+                            "gameId": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "gameName": {
+                                "type": "string"
+                            },
+                            "canJoin": {
+                                "type": "boolean",
+                                "description": "Indicates if the user can join the team. Null if externalId is not provided.",
+                                "nullable": true
+                            },
+                            "joinError": {
+                                "type": "string",
+                                "description": "Reason why the user cannot join the team. Null if canJoin is true or externalId is not provided.",
+                                "nullable": true
+                            }
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "traceId": {
+                                "type": "string"
+                            },
+                            "elapsedMs": {
+                                "type": "number"
+                            },
+                            "serverTimestamp": {
+                                "type": "string",
+                                "format": "date-time"
                             }
                         }
                     }
