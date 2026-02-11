@@ -68,6 +68,17 @@
             "openapi": "api-reference/users/openapi.json"
           }
         ]
+      },
+      {
+        "tab": "Webhook integration",
+        "groups": [
+          {
+            "group": "Webhook events",
+            "pages": [
+              "webhooks/events-and-payloads"
+            ]
+          }
+        ]
       }
     ],
     "global": {
