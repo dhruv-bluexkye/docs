@@ -491,6 +491,75 @@
                     }
                 }
             }
+        },
+        "/tournaments/{tournamentId}/registrations/teams/{teamId}": {
+            "post": {
+                "summary": "Register Team for Tournament",
+                "description": "Register a team for a tournament. This endpoint is for team registration only where 'instantRegistrations' is false. For paid tournaments, payment details must be provided.",
+                "operationId": "registerTournamentTeam",
+                "parameters": [
+                    {
+                        "name": "tournamentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    },
+                    {
+                        "name": "teamId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The unique identifier of the team"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterTournamentTeamRequest"
+                            },
+                            "example": {
+                                "applicationMessage": "string",
+                                "password": "string",
+                                "payment": {
+                                    "transactionId": "string",
+                                    "amount": 0,
+                                    "currencyId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                                    "paymentMethod": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registration successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegisterTournamentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - Team already registered or not eligible",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -1020,6 +1089,40 @@
                     }
                 }
             },
+            "RegisterTournamentTeamRequest": {
+                "type": "object",
+                "properties": {
+                    "applicationMessage": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Optional message from the applicant."
+                    },
+                    "password": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Password for password-protected tournaments."
+                    },
+                    "payment": {
+                        "type": "object",
+                        "properties": {
+                            "transactionId": {
+                                "type": "string"
+                            },
+                            "amount": {
+                                "type": "number"
+                            },
+                            "currencyId": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "paymentMethod": {
+                                "type": "string"
+                            }
+                        },
+                        "description": "Payment details for paid tournaments."
+                    }
+                }
+            },
             "RegisterTournamentRequest": {
                 "type": "object",
                 "properties": {
@@ -1032,6 +1135,25 @@
                         "type": "string",
                         "nullable": true,
                         "description": "Password for password-protected tournaments."
+                    },
+                    "payment": {
+                        "type": "object",
+                        "properties": {
+                            "transactionId": {
+                                "type": "string"
+                            },
+                            "amount": {
+                                "type": "number"
+                            },
+                            "currencyId": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "paymentMethod": {
+                                "type": "string"
+                            }
+                        },
+                        "description": "Payment details for paid tournaments."
                     }
                 }
             },
