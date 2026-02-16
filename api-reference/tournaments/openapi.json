@@ -1,0 +1,1194 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tournaments",
+        "version": "1.0.0",
+        "description": "API endpoints for accessing tournaments"
+    },
+    "servers": [
+        {
+            "url": "https://api.16tms.com/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/tournaments": {
+            "get": {
+                "summary": "Get Tournaments",
+                "description": "Fetch a list of tournaments with optional filters.",
+                "operationId": "getTournaments",
+                "parameters": [
+                    {
+                        "name": "GameId",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filter by Game ID"
+                    },
+                    {
+                        "name": "Status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Filter by tournament status"
+                    },
+                    {
+                        "name": "IsFeatured",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean"
+                        },
+                        "description": "Filter by featured status"
+                    },
+                    {
+                        "name": "PageNumber",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Page number for pagination"
+                    },
+                    {
+                        "name": "PageSize",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Number of items per page"
+                    },
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "External ID of the user. If provided, user-specific fields like 'hasJoined' will be populated."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tournaments fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetTournamentsResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Tournaments fetched successfully",
+                                    "data": {
+                                        "items": [
+                                            {
+                                                "tournamentId": "91598fb6-12f0-4fe1-aaec-6b408ab92565",
+                                                "tournamentName": "Auto Test Tournament",
+                                                "gameId": "03401d21-5109-4991-a39c-551a05bfa176",
+                                                "gameName": "BGMI",
+                                                "description": "This is an auto-filled tournament used for rapid testing scenarios.",
+                                                "enrollmentLimit": 32,
+                                                "maxTeamMembers": 4,
+                                                "minTeamMembers": 2,
+                                                "startTime": "2026-02-13T12:10:00Z",
+                                                "endTime": "2026-02-15T12:10:00Z",
+                                                "registrationDeadline": "2026-02-13T11:10:00Z",
+                                                "registrationOpen": true,
+                                                "isOnline": true,
+                                                "status": 1,
+                                                "matchType": 2,
+                                                "teamType": "squad",
+                                                "color": "#2563eb",
+                                                "prizePool": 5000,
+                                                "entryFee": 50,
+                                                "image": null,
+                                                "coverImage": null,
+                                                "isTrending": false,
+                                                "isFeatured": true,
+                                                "isPasswordProtected": false,
+                                                "instantRegistrations": false,
+                                                "entryFeeCurrencyId": "10282b10-2b44-4bbb-9c1d-155e0bb46e79",
+                                                "entryFeeCurrencyName": "d",
+                                                "entryFeeCurrencySymbol": "$",
+                                                "prizePoolCurrencyId": "10282b10-2b44-4bbb-9c1d-155e0bb46e79",
+                                                "prizePoolCurrencyName": "d",
+                                                "prizePoolCurrencySymbol": "$",
+                                                "hasJoined": null,
+                                                "canJoin": null,
+                                                "cannotJoinReason": null,
+                                                "teamsJoinedCount": 0
+                                            }
+                                        ],
+                                        "totalCount": 1,
+                                        "pageNumber": 1,
+                                        "pageSize": 20,
+                                        "totalPages": 1
+                                    },
+                                    "meta": {
+                                        "traceId": "00-f125448ab05644fa80f36b22f1d71ac5-0124b07dc253ea94-00",
+                                        "elapsedMs": 70.26,
+                                        "serverTimestamp": "2026-02-12T11:21:26.4669586Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{id}": {
+            "get": {
+                "summary": "Get Tournament Details",
+                "description": "Fetch detailed information about a specific tournament.",
+                "operationId": "getTournamentById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    },
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "External ID of the user. If provided, user-specific fields like 'hasJoined' will be populated."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tournament fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetTournamentResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Tournament fetched successfully",
+                                    "data": {
+                                        "tournamentId": "91598fb6-12f0-4fe1-aaec-6b408ab92565",
+                                        "tournamentName": "Auto Test Tournament",
+                                        "gameId": "03401d21-5109-4991-a39c-551a05bfa176",
+                                        "gameName": "BGMI",
+                                        "description": "This is an auto-filled tournament used for rapid testing scenarios.",
+                                        "enrollmentLimit": 32,
+                                        "maxTeamMembers": 4,
+                                        "minTeamMembers": 2,
+                                        "startTime": "2026-02-13T12:10:00Z",
+                                        "endTime": "2026-02-15T12:10:00Z",
+                                        "registrationDeadline": "2026-02-13T11:10:00Z",
+                                        "registrationOpen": true,
+                                        "isOnline": true,
+                                        "status": 1,
+                                        "matchType": 2,
+                                        "tournamentFormat": null,
+                                        "teamType": "squad",
+                                        "color": "#2563eb",
+                                        "prizePool": 5000,
+                                        "entryFee": 50,
+                                        "rules": "{\"test\":\"test\",\"test2\":\"test2\"}",
+                                        "prizeDistribution": "{\"positions\":[{\"prize\":\"1st Place\",\"amount\":0}],\"special\":[]}",
+                                        "pointsSystem": "{\"pointsPerFinish\":1,\"pointsPerKnock\":0,\"placementPoints\":{\"1\":10,\"2\":6,\"3\":5,\"4\":4,\"5\":3,\"6\":2,\"7\":1,\"8\":1}}",
+                                        "bracketData": null,
+                                        "watchUrls": null,
+                                        "joinLink": null,
+                                        "image": null,
+                                        "coverImage": null,
+                                        "isTrending": false,
+                                        "isFeatured": true,
+                                        "isPasswordProtected": false,
+                                        "instantRegistrations": false,
+                                        "winnerTeamId": null,
+                                        "winnerTeamName": null,
+                                        "organiserId": "ed749113-00da-4413-ba11-f62e1140cabb",
+                                        "organiserName": "Dhruv Patel",
+                                        "organiserImage": null,
+                                        "entryFeeCurrencyId": "10282b10-2b44-4bbb-9c1d-155e0bb46e79",
+                                        "entryFeeCurrencyName": "d",
+                                        "entryFeeCurrencySymbol": "$",
+                                        "prizePoolCurrencyId": "10282b10-2b44-4bbb-9c1d-155e0bb46e79",
+                                        "prizePoolCurrencyName": "d",
+                                        "prizePoolCurrencySymbol": "$",
+                                        "teamsJoinedCount": 0,
+                                        "hasJoined": null,
+                                        "canJoin": null,
+                                        "cannotJoinReason": null
+                                    },
+                                    "meta": {
+                                        "traceId": "00-ea52a8e1d11a32b60520c17c0818c717-b4ef7d2e5d5ccc9c-00",
+                                        "elapsedMs": 5.7,
+                                        "serverTimestamp": "2026-02-12T11:38:31.8482596Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{id}/rules": {
+            "get": {
+                "summary": "Get Tournament Rules",
+                "description": "Fetch the rules for a specific tournament.",
+                "operationId": "getTournamentRules",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tournament rules fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetTournamentRulesResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Tournament rules fetched successfully",
+                                    "data": {
+                                        "tournamentId": "91598fb6-12f0-4fe1-aaec-6b408ab92565",
+                                        "rules": "{\"test\":\"test\",\"test2\":\"test2\"}"
+                                    },
+                                    "meta": {
+                                        "traceId": "00-85bc1cb0bd513822a9bb106d4d7d10e3-2188fd407fe00022-00",
+                                        "elapsedMs": 11.13,
+                                        "serverTimestamp": "2026-02-12T11:40:47.4564785Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{id}/points-system": {
+            "get": {
+                "summary": "Get Tournament Points System",
+                "description": "Fetch the points system for a specific tournament.",
+                "operationId": "getTournamentPointsSystem",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tournament points system fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetTournamentPointsSystemResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Tournament points system fetched successfully",
+                                    "data": {
+                                        "tournamentId": "91598fb6-12f0-4fe1-aaec-6b408ab92565",
+                                        "pointsSystem": "{\"pointsPerFinish\":1,\"pointsPerKnock\":0,\"placementPoints\":{\"1\":10,\"2\":6,\"3\":5,\"4\":4,\"5\":3,\"6\":2,\"7\":1,\"8\":1}}"
+                                    },
+                                    "meta": {
+                                        "traceId": "00-877a407b5f5f48cfe0f3101316457f56-399d7e6761a868f5-00",
+                                        "elapsedMs": 0.96,
+                                        "serverTimestamp": "2026-02-12T11:41:28.7460917Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{id}/prize-distribution": {
+            "get": {
+                "summary": "Get Tournament Prize Distribution",
+                "description": "Fetch the prize distribution for a specific tournament.",
+                "operationId": "getTournamentPrizeDistribution",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tournament prize distribution fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetTournamentPrizeDistributionResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Tournament prize distribution fetched successfully",
+                                    "data": {
+                                        "tournamentId": "91598fb6-12f0-4fe1-aaec-6b408ab92565",
+                                        "prizeDistribution": "{\"positions\":[{\"prize\":\"1st Place\",\"amount\":0}],\"special\":[]}"
+                                    },
+                                    "meta": {
+                                        "traceId": "00-32b61e2de997adb466dabf4f0f9471cd-acd9c83f1197e704-00",
+                                        "elapsedMs": 2.85,
+                                        "serverTimestamp": "2026-02-12T11:42:18.009389Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{tournamentId}/registrations/by-external-id": {
+            "post": {
+                "summary": "Register for Tournament",
+                "description": "Register a user for a tournament using their external ID. Note: Before joining, the user must have linked their user game ID (refer to /api-reference/create-user-game-id-mapping). This endpoint is for solo participant tournaments only, not for team or instant registrations.",
+                "operationId": "registerTournamentByExternalId",
+                "parameters": [
+                    {
+                        "name": "tournamentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    },
+                    {
+                        "name": "participantExternalId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The external ID of the participant"
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterTournamentRequest"
+                            },
+                            "example": {
+                                "applicationMessage": "string",
+                                "password": "string"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registration successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegisterTournamentResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Registration successful",
+                                    "data": {
+                                        "registrationId": "d8c3e4de-117a-4f69-994c-68698db6f938",
+                                        "tournamentId": "0fe60e24-f120-45a4-baab-6bdab592b6b7",
+                                        "tournamentName": "Auto Test Tournament",
+                                        "participantId": "0cc2b3d5-71ad-49dc-ab7d-f35ba6bc0d55",
+                                        "participantType": 2,
+                                        "participantName": "string",
+                                        "submittedByUserId": "0cc2b3d5-71ad-49dc-ab7d-f35ba6bc0d55",
+                                        "submittedByName": "string",
+                                        "status": 2,
+                                        "applicationMessage": null,
+                                        "adminResponseMessage": null,
+                                        "processedByUserId": null,
+                                        "processedByName": null,
+                                        "processedAt": "2026-02-12T11:55:19.463572Z",
+                                        "appliedAt": "2026-02-12T11:55:19.463567Z",
+                                        "participantMemberCount": 1,
+                                        "participantLogo": "string",
+                                        "entryFeePaid": 50,
+                                        "entryFeeCurrencyId": "10282b10-2b44-4bbb-9c1d-155e0bb46e79",
+                                        "paymentTransactionId": null,
+                                        "paymentStatus": "PendingPayment",
+                                        "refundTransactionId": null,
+                                        "refundedAt": null
+                                    },
+                                    "meta": {
+                                        "traceId": "00-54ee68d2ee06131280034be843249fb6-837009297a438700-00",
+                                        "elapsedMs": 37.07,
+                                        "serverTimestamp": "2026-02-12T11:55:19.4876315Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - User already registered or game account not linked",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "userAlreadyRegistered": {
+                                        "summary": "User already registered",
+                                        "value": {
+                                            "success": false,
+                                            "error": {
+                                                "code": "BUSINESS_RULE_VIOLATION",
+                                                "message": "Participant is not eligible: User already registered"
+                                            },
+                                            "meta": {
+                                                "traceId": "00-fe8b3aed298594d160e6d1679bf8e766-512629d94f2457cf-00"
+                                            }
+                                        }
+                                    },
+                                    "gameAccountNotLinked": {
+                                        "summary": "Game account not linked",
+                                        "value": {
+                                            "success": false,
+                                            "error": {
+                                                "code": "BUSINESS_RULE_VIOLATION",
+                                                "message": "Link your game account to join"
+                                            },
+                                            "meta": {
+                                                "traceId": "00-636872ec12ed1858b566853900779e89-727bf69991ab28ee-00"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY",
+                "description": "API key for authentication."
+            }
+        },
+        "schemas": {
+            "GetTournamentsResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/TournamentItem"
+                                }
+                            },
+                            "totalCount": {
+                                "type": "integer"
+                            },
+                            "pageNumber": {
+                                "type": "integer"
+                            },
+                            "pageSize": {
+                                "type": "integer"
+                            },
+                            "totalPages": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "TournamentItem": {
+                "type": "object",
+                "properties": {
+                    "tournamentId": {
+                        "type": "string",
+                        "example": "91598fb6-12f0-4fe1-aaec-6b408ab92565"
+                    },
+                    "tournamentName": {
+                        "type": "string",
+                        "example": "Auto Test Tournament"
+                    },
+                    "gameId": {
+                        "type": "string",
+                        "example": "03401d21-5109-4991-a39c-551a05bfa176"
+                    },
+                    "gameName": {
+                        "type": "string",
+                        "example": "BGMI"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "This is an auto-filled tournament used for rapid testing scenarios."
+                    },
+                    "enrollmentLimit": {
+                        "type": "integer",
+                        "example": 32
+                    },
+                    "maxTeamMembers": {
+                        "type": "integer",
+                        "example": 4
+                    },
+                    "minTeamMembers": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-13T12:10:00Z"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-15T12:10:00Z"
+                    },
+                    "registrationDeadline": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-13T11:10:00Z"
+                    },
+                    "registrationOpen": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "isOnline": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "matchType": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "teamType": {
+                        "type": "string",
+                        "example": "squad"
+                    },
+                    "color": {
+                        "type": "string",
+                        "example": "#2563eb"
+                    },
+                    "prizePool": {
+                        "type": "number",
+                        "example": 5000
+                    },
+                    "entryFee": {
+                        "type": "number",
+                        "example": 50
+                    },
+                    "image": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "coverImage": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "isTrending": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "isFeatured": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "isPasswordProtected": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "instantRegistrations": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "entryFeeCurrencyId": {
+                        "type": "string",
+                        "example": "10282b10-2b44-4bbb-9c1d-155e0bb46e79"
+                    },
+                    "entryFeeCurrencyName": {
+                        "type": "string",
+                        "example": "d"
+                    },
+                    "entryFeeCurrencySymbol": {
+                        "type": "string",
+                        "example": "$"
+                    },
+                    "prizePoolCurrencyId": {
+                        "type": "string",
+                        "example": "10282b10-2b44-4bbb-9c1d-155e0bb46e79"
+                    },
+                    "prizePoolCurrencyName": {
+                        "type": "string",
+                        "example": "d"
+                    },
+                    "prizePoolCurrencySymbol": {
+                        "type": "string",
+                        "example": "$"
+                    },
+                    "hasJoined": {
+                        "type": "boolean",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "canJoin": {
+                        "type": "boolean",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "cannotJoinReason": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "teamsJoinedCount": {
+                        "type": "integer",
+                        "example": 0
+                    }
+                }
+            },
+            "Meta": {
+                "type": "object",
+                "properties": {
+                    "traceId": {
+                        "type": "string",
+                        "example": "00-f125448ab05644fa80f36b22f1d71ac5-0124b07dc253ea94-00"
+                    },
+                    "elapsedMs": {
+                        "type": "number",
+                        "example": 70.26
+                    },
+                    "serverTimestamp": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-12T11:21:26.4669586Z"
+                    }
+                }
+            },
+            "GetTournamentResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/TournamentDetail"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "TournamentDetail": {
+                "type": "object",
+                "properties": {
+                    "tournamentId": {
+                        "type": "string",
+                        "example": "91598fb6-12f0-4fe1-aaec-6b408ab92565"
+                    },
+                    "tournamentName": {
+                        "type": "string",
+                        "example": "Auto Test Tournament"
+                    },
+                    "gameId": {
+                        "type": "string",
+                        "example": "03401d21-5109-4991-a39c-551a05bfa176"
+                    },
+                    "gameName": {
+                        "type": "string",
+                        "example": "BGMI"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "This is an auto-filled tournament used for rapid testing scenarios."
+                    },
+                    "enrollmentLimit": {
+                        "type": "integer",
+                        "example": 32
+                    },
+                    "maxTeamMembers": {
+                        "type": "integer",
+                        "example": 4
+                    },
+                    "minTeamMembers": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-13T12:10:00Z"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-15T12:10:00Z"
+                    },
+                    "registrationDeadline": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-13T11:10:00Z"
+                    },
+                    "registrationOpen": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "isOnline": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "matchType": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "tournamentFormat": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "teamType": {
+                        "type": "string",
+                        "example": "squad"
+                    },
+                    "color": {
+                        "type": "string",
+                        "example": "#2563eb"
+                    },
+                    "prizePool": {
+                        "type": "number",
+                        "example": 5000
+                    },
+                    "entryFee": {
+                        "type": "number",
+                        "example": 50
+                    },
+                    "rules": {
+                        "type": "string",
+                        "example": "{\"test\":\"test\",\"test2\":\"test2\"}"
+                    },
+                    "prizeDistribution": {
+                        "type": "string",
+                        "example": "{\"positions\":[{\"prize\":\"1st Place\",\"amount\":0}],\"special\":[]}"
+                    },
+                    "pointsSystem": {
+                        "type": "string",
+                        "example": "{\"pointsPerFinish\":1,\"pointsPerKnock\":0,\"placementPoints\":{\"1\":10,\"2\":6,\"3\":5,\"4\":4,\"5\":3,\"6\":2,\"7\":1,\"8\":1}}"
+                    },
+                    "bracketData": {
+                        "type": "object",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "watchUrls": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true,
+                        "example": null
+                    },
+                    "joinLink": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "image": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "coverImage": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "isTrending": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "isFeatured": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "isPasswordProtected": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "instantRegistrations": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "winnerTeamId": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "winnerTeamName": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "organiserId": {
+                        "type": "string",
+                        "example": "ed749113-00da-4413-ba11-f62e1140cabb"
+                    },
+                    "organiserName": {
+                        "type": "string",
+                        "example": "Dhruv Patel"
+                    },
+                    "organiserImage": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "entryFeeCurrencyId": {
+                        "type": "string",
+                        "example": "10282b10-2b44-4bbb-9c1d-155e0bb46e79"
+                    },
+                    "entryFeeCurrencyName": {
+                        "type": "string",
+                        "example": "d"
+                    },
+                    "entryFeeCurrencySymbol": {
+                        "type": "string",
+                        "example": "$"
+                    },
+                    "prizePoolCurrencyId": {
+                        "type": "string",
+                        "example": "10282b10-2b44-4bbb-9c1d-155e0bb46e79"
+                    },
+                    "prizePoolCurrencyName": {
+                        "type": "string",
+                        "example": "d"
+                    },
+                    "prizePoolCurrencySymbol": {
+                        "type": "string",
+                        "example": "$"
+                    },
+                    "teamsJoinedCount": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "hasJoined": {
+                        "type": "boolean",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "canJoin": {
+                        "type": "boolean",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "cannotJoinReason": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    }
+                }
+            },
+            "GetTournamentRulesResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "tournamentId": {
+                                "type": "string",
+                                "example": "91598fb6-12f0-4fe1-aaec-6b408ab92565"
+                            },
+                            "rules": {
+                                "type": "string",
+                                "example": "{\"test\":\"test\",\"test2\":\"test2\"}"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "GetTournamentPointsSystemResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "tournamentId": {
+                                "type": "string",
+                                "example": "91598fb6-12f0-4fe1-aaec-6b408ab92565"
+                            },
+                            "pointsSystem": {
+                                "type": "string",
+                                "example": "{\"pointsPerFinish\":1,\"pointsPerKnock\":0,\"placementPoints\":{\"1\":10,\"2\":6,\"3\":5,\"4\":4,\"5\":3,\"6\":2,\"7\":1,\"8\":1}}"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "GetTournamentPrizeDistributionResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "tournamentId": {
+                                "type": "string",
+                                "example": "91598fb6-12f0-4fe1-aaec-6b408ab92565"
+                            },
+                            "prizeDistribution": {
+                                "type": "string",
+                                "example": "{\"positions\":[{\"prize\":\"1st Place\",\"amount\":0}],\"special\":[]}"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "RegisterTournamentRequest": {
+                "type": "object",
+                "properties": {
+                    "applicationMessage": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Optional message from the applicant."
+                    },
+                    "password": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Password for password-protected tournaments."
+                    }
+                }
+            },
+            "RegisterTournamentResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Registration successful"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/RegistrationData"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "RegistrationData": {
+                "type": "object",
+                "properties": {
+                    "registrationId": {
+                        "type": "string",
+                        "example": "d8c3e4de-117a-4f69-994c-68698db6f938"
+                    },
+                    "tournamentId": {
+                        "type": "string",
+                        "example": "0fe60e24-f120-45a4-baab-6bdab592b6b7"
+                    },
+                    "tournamentName": {
+                        "type": "string",
+                        "example": "Auto Test Tournament"
+                    },
+                    "participantId": {
+                        "type": "string",
+                        "example": "0cc2b3d5-71ad-49dc-ab7d-f35ba6bc0d55"
+                    },
+                    "participantType": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "participantName": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    },
+                    "submittedByUserId": {
+                        "type": "string",
+                        "example": "0cc2b3d5-71ad-49dc-ab7d-f35ba6bc0d55"
+                    },
+                    "submittedByName": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "applicationMessage": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "adminResponseMessage": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "processedByUserId": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "processedByName": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "processedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-12T11:55:19.463572Z"
+                    },
+                    "appliedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-12T11:55:19.463567Z"
+                    },
+                    "participantMemberCount": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "participantLogo": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    },
+                    "entryFeePaid": {
+                        "type": "number",
+                        "example": 50
+                    },
+                    "entryFeeCurrencyId": {
+                        "type": "string",
+                        "example": "10282b10-2b44-4bbb-9c1d-155e0bb46e79"
+                    },
+                    "paymentTransactionId": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "paymentStatus": {
+                        "type": "string",
+                        "example": "PendingPayment"
+                    },
+                    "refundTransactionId": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "refundedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true,
+                        "example": null
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string",
+                                "example": "BUSINESS_RULE_VIOLATION"
+                            },
+                            "message": {
+                                "type": "string",
+                                "example": "Participant is not eligible"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            }
+        }
+    }
+}

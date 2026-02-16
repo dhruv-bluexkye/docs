@@ -60,6 +60,10 @@
             "openapi": "api-reference/teams/openapi.json"
           },
           {
+            "group": "Tournaments",
+            "openapi": "api-reference/tournaments/openapi.json"
+          },
+          {
             "group": "User Game IDs",
             "openapi": "api-reference/user-game-ids/openapi.json"
           },
