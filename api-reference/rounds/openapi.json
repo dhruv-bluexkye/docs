@@ -1,0 +1,196 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Rounds",
+        "version": "1.0.0",
+        "description": "API endpoints for accessing rounds"
+    },
+    "servers": [
+        {
+            "url": "https://api.16tms.com/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/rounds": {
+            "get": {
+                "summary": "Get Rounds",
+                "description": "Fetch a list of rounds, optionally filtered by tournament.",
+                "operationId": "getRounds",
+                "parameters": [
+                    {
+                        "name": "TournamentId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filter by Tournament ID"
+                    },
+                    {
+                        "name": "PageNumber",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Page number"
+                    },
+                    {
+                        "name": "PageSize",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Items per page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rounds fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetRoundsResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY",
+                "description": "API key for authentication."
+            }
+        },
+        "schemas": {
+            "Meta": {
+                "type": "object",
+                "properties": {
+                    "traceId": {
+                        "type": "string",
+                        "example": "00-f125448ab05644fa80f36b22f1d71ac5-0124b07dc253ea94-00"
+                    },
+                    "elapsedMs": {
+                        "type": "number",
+                        "example": 70.26
+                    },
+                    "serverTimestamp": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-12T11:21:26.4669586Z"
+                    }
+                }
+            },
+            "GetRoundsResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/RoundItem"
+                                }
+                            },
+                            "totalCount": {
+                                "type": "integer"
+                            },
+                            "pageNumber": {
+                                "type": "integer"
+                            },
+                            "pageSize": {
+                                "type": "integer"
+                            },
+                            "totalPages": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "RoundItem": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "f644bc75-8786-40a3-b475-017b6f81ba54"
+                    },
+                    "tournamentId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "d39102c1-a8af-4ecb-9f99-8b0fe8fe993b"
+                    },
+                    "roundName": {
+                        "type": "string",
+                        "example": "Round 3"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "Auto-generated round 3"
+                    },
+                    "teamCount": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "matchesPerGroup": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-11T08:37:00Z"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-19T08:37:00Z"
+                    },
+                    "roundType": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "roundNumber": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "numberOfGroups": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "numberOfMatches": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                }
+            }
+        }
+    }
+}

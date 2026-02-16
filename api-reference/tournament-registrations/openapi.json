@@ -1,0 +1,453 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tournament Registrations",
+        "version": "1.0.0",
+        "description": "API endpoints for tournament registrations"
+    },
+    "servers": [
+        {
+            "url": "https://api.16tms.com/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/tournaments/{tournamentId}/registrations/by-external-id": {
+            "post": {
+                "summary": "Register for Tournament",
+                "description": "Register a user for a tournament using their external ID. Note: Before joining, the user must have linked their user game ID. This endpoint is for solo participant tournaments only.",
+                "operationId": "registerTournamentByExternalId",
+                "parameters": [
+                    {
+                        "name": "tournamentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    },
+                    {
+                        "name": "participantExternalId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The external ID of the participant"
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterTournamentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registration successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegisterTournamentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - User already registered or game account not linked",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{tournamentId}/registrations/teams/{teamId}": {
+            "post": {
+                "summary": "Register Team for Tournament",
+                "description": "Register a team for a tournament. This endpoint is for team registration where 'instantRegistrations' is false.",
+                "operationId": "registerTournamentTeam",
+                "parameters": [
+                    {
+                        "name": "tournamentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    },
+                    {
+                        "name": "teamId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The unique identifier of the team"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterTournamentTeamRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registration successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegisterTournamentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - Team already registered or not eligible",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{tournamentId}/registrations/instant-registration": {
+            "post": {
+                "summary": "Instant Team Registration for Tournament",
+                "description": "Register teams instantly for a tournament. This handles bulk team registration with player details.",
+                "operationId": "instantTournamentRegistration",
+                "parameters": [
+                    {
+                        "name": "tournamentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InstantRegistrationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registration successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegisterTournamentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - Registration failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY",
+                "description": "API key for authentication."
+            }
+        },
+        "schemas": {
+            "Meta": {
+                "type": "object",
+                "properties": {
+                    "traceId": {
+                        "type": "string",
+                        "example": "00-f125448ab05644fa80f36b22f1d71ac5-0124b07dc253ea94-00"
+                    },
+                    "elapsedMs": {
+                        "type": "number",
+                        "example": 70.26
+                    },
+                    "serverTimestamp": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-12T11:21:26.4669586Z"
+                    }
+                }
+            },
+            "RegisterTournamentRequest": {
+                "type": "object",
+                "properties": {
+                    "applicationMessage": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Optional message from the applicant."
+                    },
+                    "password": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Password for password-protected tournaments."
+                    },
+                    "payment": {
+                        "type": "object",
+                        "properties": {
+                            "transactionId": {
+                                "type": "string"
+                            },
+                            "amount": {
+                                "type": "number"
+                            },
+                            "currencyId": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "paymentMethod": {
+                                "type": "string"
+                            }
+                        },
+                        "description": "Payment details for paid tournaments."
+                    }
+                }
+            },
+            "RegisterTournamentTeamRequest": {
+                "type": "object",
+                "properties": {
+                    "applicationMessage": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Optional message from the applicant."
+                    },
+                    "password": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Password for password-protected tournaments."
+                    },
+                    "payment": {
+                        "type": "object",
+                        "properties": {
+                            "transactionId": {
+                                "type": "string"
+                            },
+                            "amount": {
+                                "type": "number"
+                            },
+                            "currencyId": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "paymentMethod": {
+                                "type": "string"
+                            }
+                        },
+                        "description": "Payment details for paid tournaments."
+                    }
+                }
+            },
+            "RegisterTournamentResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Registration successful"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/RegistrationData"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "RegistrationData": {
+                "type": "object",
+                "properties": {
+                    "registrationId": {
+                        "type": "string",
+                        "example": "d8c3e4de-117a-4f69-994c-68698db6f938"
+                    },
+                    "tournamentId": {
+                        "type": "string",
+                        "example": "0fe60e24-f120-45a4-baab-6bdab592b6b7"
+                    },
+                    "tournamentName": {
+                        "type": "string",
+                        "example": "Auto Test Tournament"
+                    },
+                    "participantId": {
+                        "type": "string",
+                        "example": "0cc2b3d5-71ad-49dc-ab7d-f35ba6bc0d55"
+                    },
+                    "participantType": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "participantName": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "entryFeePaid": {
+                        "type": "number",
+                        "example": 50
+                    },
+                    "paymentStatus": {
+                        "type": "string",
+                        "example": "PendingPayment"
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string",
+                                "example": "BUSINESS_RULE_VIOLATION"
+                            },
+                            "message": {
+                                "type": "string",
+                                "example": "Participant is not eligible"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "InstantRegistrationRequest": {
+                "type": "object",
+                "properties": {
+                    "tournamentId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "teams": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InstantTeam"
+                        }
+                    }
+                },
+                "required": [
+                    "tournamentId",
+                    "teams"
+                ]
+            },
+            "InstantTeam": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "players": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InstantPlayer"
+                        }
+                    },
+                    "payment": {
+                        "type": "object",
+                        "properties": {
+                            "transactionId": {
+                                "type": "string"
+                            },
+                            "amount": {
+                                "type": "number"
+                            },
+                            "currencyId": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "paymentMethod": {
+                                "type": "string"
+                            }
+                        },
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "players"
+                ]
+            },
+            "InstantPlayer": {
+                "type": "object",
+                "properties": {
+                    "externalId": {
+                        "type": "string",
+                        "description": "Required for the first player (captain)."
+                    },
+                    "displayName": {
+                        "type": "string"
+                    },
+                    "gameUserId": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "displayName",
+                    "gameUserId"
+                ]
+            }
+        }
+    }
+}

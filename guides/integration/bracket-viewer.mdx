@@ -1,0 +1,58 @@
+---
+title: 'Bracket Viewer'
+description: 'Embed dynamic tournament brackets into your application'
+---
+
+The Bracket Viewer allows you to display real-time tournament brackets within your application or website.
+
+## Overview
+
+The bracket viewer is a web-based component that visualizes the progression of a tournament. It is specifically designed for **Duel (1v1) Tournaments**.
+
+## Usage
+
+To integrate the bracket viewer, you can embed it using an `iframe` or a `WebView` (for mobile applications).
+
+### URL Structure
+
+The URL for the bracket viewer follows this pattern:
+
+```
+https://brackets.16tms.com/{tournament_id}
+```
+
+Replace `{tournament_id}` with the unique identifier of the tournament you wish to display.
+
+### Integration Example
+
+Here is a basic example of how to embed the bracket viewer using an HTML iframe:
+
+```html
+<iframe 
+  src="https://brackets.16tms.com/test-double-elimination" 
+  width="100%" 
+  height="600px" 
+  frameborder="0" 
+  allowfullscreen>
+</iframe>
+```
+
+### Live Demo
+
+<iframe 
+  src="https://brackets.16tms.com/test-double-elimination" 
+  width="100%" 
+  height="600px" 
+  frameborder="0" 
+  allowfullscreen>
+</iframe>
+
+## Customization
+
+You can customize the appearance of the bracket viewer to match your platform's branding.
+
+1.  Log in to the **Console**.
+2.  Navigate to **Tournaments** > **Select Tournament** > **Brackets**.
+3.  Use the **Customize Bracket** options to adjust colors, themes, and other visual settings.
+
+Changes made in the console will be reflected in the embedded viewer.

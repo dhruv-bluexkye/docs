@@ -33,7 +33,8 @@
             "pages": [
               "guides/integration/user-flow",
               "guides/integration/general-api-flow",
-              "guides/integration/tournament-registration"
+              "guides/integration/tournament-registration",
+              "guides/integration/bracket-viewer"
             ]
           }
         ]
@@ -62,6 +63,14 @@
           {
             "group": "Tournaments",
             "openapi": "api-reference/tournaments/openapi.json"
+          },
+          {
+            "group": "Tournament Registrations",
+            "openapi": "api-reference/tournament-registrations/openapi.json"
+          },
+          {
+            "group": "Rounds",
+            "openapi": "api-reference/rounds/openapi.json"
           },
           {
             "group": "User Game IDs",
