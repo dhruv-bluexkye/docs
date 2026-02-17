@@ -1,0 +1,374 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Standings",
+        "version": "1.0.0",
+        "description": "API endpoints for accessing standings"
+    },
+    "servers": [
+        {
+            "url": "https://api.16tms.com/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/tournaments/{tournamentId}/duel/standings": {
+            "get": {
+                "summary": "Get Duel Standings",
+                "description": "Fetch duel standings for a specific tournament.",
+                "operationId": "getDuelStandings",
+                "parameters": [
+                    {
+                        "name": "tournamentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    },
+                    {
+                        "name": "roundId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "Optional unique identifier of the round"
+                    },
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Optional external ID to check for 'isMe' status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Duel standings fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetDuelStandingsResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Duel standings fetched successfully",
+                                    "data": {
+                                        "tournamentId": "7e8aeca4-f658-4665-9abc-cec9b369a902",
+                                        "tournamentName": "The invitational",
+                                        "roundId": null,
+                                        "roundName": null,
+                                        "standings": [
+                                            {
+                                                "participantId": "273ef172-9352-41b1-94fe-384dd3608b8f",
+                                                "participantName": "Crimson Vipers",
+                                                "participantLogo": "https://api.dicebear.com/7.x/identicon/svg?seed=Vipers",
+                                                "participantExternalId": "",
+                                                "participantType": 1,
+                                                "wins": 0,
+                                                "losses": 0,
+                                                "draws": 1,
+                                                "matchCount": 1,
+                                                "isMe": false
+                                            }
+                                        ]
+                                    },
+                                    "meta": {
+                                        "traceId": "00-641d2c822a17f801b3a7bbec5b1e12df-c5b1602776f181ad-00",
+                                        "elapsedMs": 36.87,
+                                        "serverTimestamp": "2026-02-17T13:15:40.9560469Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rounds/{roundId}/arena/standings": {
+            "get": {
+                "summary": "Get Arena Standings",
+                "description": "Fetch arena standings for a specific round.",
+                "operationId": "getArenaStandings",
+                "parameters": [
+                    {
+                        "name": "roundId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "The unique identifier of the round."
+                    },
+                    {
+                        "name": "externalId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Optional external ID to check for 'isMe' status."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Arena standings fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetArenaStandingsResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Arena standings fetched successfully.",
+                                    "data": {
+                                        "tournamentRoundId": "444689bd-b0d7-48e9-b765-46a15513f461",
+                                        "roundName": "Test Round 639",
+                                        "roundType": 7,
+                                        "lastUpdatedAt": "2026-02-17T18:26:16.0757992+05:30",
+                                        "lastUpdatedBy": "fd9223bc-a5e4-48f2-9f40-ba8421c78c9f",
+                                        "standings": [
+                                            {
+                                                "rank": 1,
+                                                "wins": 0,
+                                                "matchCount": 0,
+                                                "participantId": "273ef172-9352-41b1-94fe-384dd3608b8f",
+                                                "participantLogo": null,
+                                                "participantName": null,
+                                                "participantType": 1,
+                                                "participantExternalId": "",
+                                                "isMe": false
+                                            },
+                                            {
+                                                "rank": 2,
+                                                "wins": 0,
+                                                "matchCount": 0,
+                                                "participantId": "96f55a23-bd4e-4e6e-88e9-5c4a8360b4b6",
+                                                "participantLogo": null,
+                                                "participantName": null,
+                                                "participantType": 1,
+                                                "participantExternalId": "",
+                                                "isMe": false
+                                            }
+                                        ]
+                                    },
+                                    "meta": {
+                                        "traceId": "00-68cdcb4b3f0d207330aa93abf3a23f7a-07d149faefa6cf4a-00",
+                                        "elapsedMs": 4.37,
+                                        "serverTimestamp": "2026-02-17T13:13:31.5241351Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY",
+                "description": "API key for authentication."
+            }
+        },
+        "schemas": {
+            "Meta": {
+                "type": "object",
+                "properties": {
+                    "traceId": {
+                        "type": "string",
+                        "example": "00-f125448ab05644fa80f36b22f1d71ac5-0124b07dc253ea94-00"
+                    },
+                    "elapsedMs": {
+                        "type": "number",
+                        "example": 70.26
+                    },
+                    "serverTimestamp": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-12T11:21:26.4669586Z"
+                    }
+                }
+            },
+            "GetDuelStandingsResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/DuelStandingsData"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "DuelStandingsData": {
+                "type": "object",
+                "properties": {
+                    "tournamentId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tournamentName": {
+                        "type": "string"
+                    },
+                    "roundId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "roundName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "standings": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DuelStandingItem"
+                        }
+                    }
+                }
+            },
+            "DuelStandingItem": {
+                "type": "object",
+                "properties": {
+                    "participantId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "participantName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participantLogo": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participantExternalId": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participantType": {
+                        "type": "integer"
+                    },
+                    "wins": {
+                        "type": "integer"
+                    },
+                    "losses": {
+                        "type": "integer"
+                    },
+                    "draws": {
+                        "type": "integer"
+                    },
+                    "matchCount": {
+                        "type": "integer"
+                    },
+                    "isMe": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "GetArenaStandingsResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ArenaStandingsData"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "ArenaStandingsData": {
+                "type": "object",
+                "properties": {
+                    "tournamentRoundId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "roundName": {
+                        "type": "string"
+                    },
+                    "roundType": {
+                        "type": "integer"
+                    },
+                    "lastUpdatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "lastUpdatedBy": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "standings": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ArenaStandingItem"
+                        }
+                    }
+                }
+            },
+            "ArenaStandingItem": {
+                "type": "object",
+                "properties": {
+                    "rank": {
+                        "type": "integer"
+                    },
+                    "wins": {
+                        "type": "integer"
+                    },
+                    "matchCount": {
+                        "type": "integer"
+                    },
+                    "participantId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "participantLogo": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participantName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participantType": {
+                        "type": "integer"
+                    },
+                    "participantExternalId": {
+                        "type": "string"
+                    },
+                    "isMe": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        }
+    }
+}

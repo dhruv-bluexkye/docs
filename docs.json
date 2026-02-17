@@ -81,6 +81,10 @@
             "openapi": "api-reference/rounds/openapi.json"
           },
           {
+            "group": "Standings",
+            "openapi": "api-reference/standings/openapi.json"
+          },
+          {
             "group": "User Game IDs",
             "openapi": "api-reference/user-game-ids/openapi.json"
           },
