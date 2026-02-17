@@ -1,0 +1,586 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Matches",
+        "version": "1.0.0",
+        "description": "API endpoints to fetch match data, including Duel and FFA matches."
+    },
+    "servers": [
+        {
+            "url": "https://api.16tms.com/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/tournaments/{tournamentId}/duel-standings": {
+            "get": {
+                "summary": "Get Duel Matches",
+                "description": "Fetch a list of duel matches for a specific tournament.",
+                "operationId": "getDuelMatches",
+                "parameters": [
+                    {
+                        "name": "tournamentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    },
+                    {
+                        "name": "roundId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "Optional filter by Round ID"
+                    },
+                    {
+                        "name": "matchStatus",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1,
+                                2,
+                                3,
+                                4,
+                                5
+                            ]
+                        },
+                        "description": "Optional filter by match status (e.g., 1 for Scheduled, 2 for Ongoing, etc.)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Duel matches fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetDuelMatchesResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Duel matches fetched successfully",
+                                    "data": {
+                                        "matches": [
+                                            {
+                                                "matchId": "13066de7-13d0-4c16-8337-1af2380e68ce",
+                                                "tournamentId": "7e8aeca4-f658-4665-9abc-cec9b369a902",
+                                                "tournamentName": "The invitational",
+                                                "roundId": "a3601040-bedd-4b13-a745-a098e5fe2548",
+                                                "roundName": "Round 1",
+                                                "matchNumber": 1,
+                                                "matchStatus": 1,
+                                                "matchResult": 1,
+                                                "scheduledAt": null,
+                                                "bestOf": 1,
+                                                "games": [
+                                                    {
+                                                        "matchGameId": "59654f42-c833-4fdf-bbaa-3009a673c7af",
+                                                        "matchId": "13066de7-13d0-4c16-8337-1af2380e68ce",
+                                                        "gameSerial": 1,
+                                                        "mapId": null,
+                                                        "mapName": null,
+                                                        "participant1Score": 0,
+                                                        "participant2Score": 0,
+                                                        "winnerId": null,
+                                                        "gameResult": 1,
+                                                        "extraData": null,
+                                                        "scheduledAt": null
+                                                    }
+                                                ],
+                                                "duelDetail": {
+                                                    "participant1Id": "96f55a23-bd4e-4e6e-88e9-5c4a8360b4b6",
+                                                    "participant1Name": "Frost Wolves",
+                                                    "participant1Logo": "https://api.dicebear.com/7.x/identicon/svg?seed=Wolves",
+                                                    "participant1ExternalId": null,
+                                                    "participant1Type": 1,
+                                                    "participant2Id": "273ef172-9352-41b1-94fe-384dd3608b8f",
+                                                    "participant2Name": "Crimson Vipers",
+                                                    "participant2Logo": "https://api.dicebear.com/7.x/identicon/svg?seed=Vipers",
+                                                    "participant2ExternalId": null,
+                                                    "participant2Type": 1,
+                                                    "participant1Score": 0,
+                                                    "participant2Score": 0,
+                                                    "winnerTeamId": null,
+                                                    "mapId": null,
+                                                    "mapName": null,
+                                                    "duration": null
+                                                }
+                                            }
+                                        ],
+                                        "totalCount": 1,
+                                        "pageNumber": 1,
+                                        "pageSize": 20,
+                                        "totalPages": 1
+                                    },
+                                    "meta": {
+                                        "traceId": "00-581cbad118ee4faf72f5cd0a285ae0d1-854df0c5a4b34d2c-00",
+                                        "elapsedMs": 8.19,
+                                        "serverTimestamp": "2026-02-17T12:04:51.2606015Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/matches/ffa": {
+            "get": {
+                "summary": "Get FFA Matches",
+                "description": "Fetch a list of FFA matches for a specific tournament.",
+                "operationId": "getFfaMatches",
+                "parameters": [
+                    {
+                        "name": "tournamentId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "The unique identifier of the tournament"
+                    },
+                    {
+                        "name": "roundId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "Optional filter by Round ID"
+                    },
+                    {
+                        "name": "groupId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "Optional filter by Group ID"
+                    },
+                    {
+                        "name": "groupVersion",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Optional filter by Group Version"
+                    },
+                    {
+                        "name": "matchStatus",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1,
+                                2,
+                                3,
+                                4,
+                                5
+                            ]
+                        },
+                        "description": "Optional filter by match status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "FFA matches fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetFfaMatchesResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "FFA matches fetched successfully",
+                                    "data": {
+                                        "matches": [
+                                            {
+                                                "matchId": "b3d3c3c1-f9ac-406d-bc35-2402758eceb1",
+                                                "tournamentId": "788f9b9d-1aec-4dec-b2fc-d585a6ef149f",
+                                                "tournamentName": "Fortnite 2026",
+                                                "roundId": "44accbab-48f7-4fe0-8085-df45903863a8",
+                                                "roundName": "Round 1 (Normal)",
+                                                "groups": [
+                                                    {
+                                                        "groupId": "ee6c62d0-0802-4327-9961-5ed446f5702f",
+                                                        "groupName": "Group 1",
+                                                        "version": 1
+                                                    }
+                                                ],
+                                                "matchNumber": null,
+                                                "matchStatus": 1,
+                                                "scheduledAt": null,
+                                                "mapId": null,
+                                                "mapName": null
+                                            }
+                                        ],
+                                        "totalCount": 1,
+                                        "pageNumber": 1,
+                                        "pageSize": 20,
+                                        "totalPages": 1
+                                    },
+                                    "meta": {
+                                        "traceId": "00-7872a6ba64ea409e0dcedd596312b120-9e0ad76ad6222173-00",
+                                        "elapsedMs": 64.67,
+                                        "serverTimestamp": "2026-02-17T12:11:00.6637797Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY",
+                "description": "API key for authentication."
+            }
+        },
+        "schemas": {
+            "GetDuelMatchesResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "matches": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/DuelMatch"
+                                }
+                            },
+                            "totalCount": {
+                                "type": "integer"
+                            },
+                            "pageNumber": {
+                                "type": "integer"
+                            },
+                            "pageSize": {
+                                "type": "integer"
+                            },
+                            "totalPages": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "DuelMatch": {
+                "type": "object",
+                "properties": {
+                    "matchId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tournamentId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tournamentName": {
+                        "type": "string"
+                    },
+                    "roundId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "roundName": {
+                        "type": "string"
+                    },
+                    "matchNumber": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "matchStatus": {
+                        "type": "integer"
+                    },
+                    "matchResult": {
+                        "type": "integer"
+                    },
+                    "scheduledAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "bestOf": {
+                        "type": "integer"
+                    },
+                    "games": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DuelGame"
+                        }
+                    },
+                    "duelDetail": {
+                        "$ref": "#/components/schemas/DuelDetail"
+                    }
+                }
+            },
+            "DuelGame": {
+                "type": "object",
+                "properties": {
+                    "matchGameId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "matchId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "gameSerial": {
+                        "type": "integer"
+                    },
+                    "mapId": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "mapName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participant1Score": {
+                        "type": "number"
+                    },
+                    "participant2Score": {
+                        "type": "number"
+                    },
+                    "winnerId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "gameResult": {
+                        "type": "integer"
+                    },
+                    "extraData": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "scheduledAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                }
+            },
+            "DuelDetail": {
+                "type": "object",
+                "properties": {
+                    "participant1Id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "participant1Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participant1Logo": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participant1ExternalId": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participant1Type": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "participant2Id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "participant2Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participant2Logo": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participant2ExternalId": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "participant2Type": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "participant1Score": {
+                        "type": "number"
+                    },
+                    "participant2Score": {
+                        "type": "number"
+                    },
+                    "winnerTeamId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "mapId": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "mapName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "duration": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "GetFfaMatchesResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "matches": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/FfaMatch"
+                                }
+                            },
+                            "totalCount": {
+                                "type": "integer"
+                            },
+                            "pageNumber": {
+                                "type": "integer"
+                            },
+                            "pageSize": {
+                                "type": "integer"
+                            },
+                            "totalPages": {
+                                "type": "integer"
+                            }
+                        },
+                        "nullable": true
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "FfaMatch": {
+                "type": "object",
+                "properties": {
+                    "matchId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tournamentId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tournamentName": {
+                        "type": "string"
+                    },
+                    "roundId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "roundName": {
+                        "type": "string"
+                    },
+                    "groups": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FfaGroup"
+                        },
+                        "nullable": true
+                    },
+                    "matchNumber": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "matchStatus": {
+                        "type": "integer"
+                    },
+                    "scheduledAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "mapId": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "mapName": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "FfaGroup": {
+                "type": "object",
+                "properties": {
+                    "groupId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "groupName": {
+                        "type": "string"
+                    },
+                    "version": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "Meta": {
+                "type": "object",
+                "properties": {
+                    "traceId": {
+                        "type": "string"
+                    },
+                    "elapsedMs": {
+                        "type": "number"
+                    },
+                    "serverTimestamp": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            }
+        }
+    }
+}

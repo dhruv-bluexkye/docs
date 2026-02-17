@@ -282,34 +282,70 @@
                                 },
                                 "example": {
                                     "success": true,
-                                    "message": "Team retrieved successfully",
+                                    "message": "Team fetched successfully",
                                     "data": {
-                                        "teamId": "f0ae597c-a8e9-455c-96ea-d54cf9e98c23",
-                                        "name": "dhruvvv",
-                                        "role": 1,
-                                        "isOwner": true,
-                                        "logo": "test",
-                                        "gameId": "3b1dd428-f288-4654-beff-ae523005f47a",
-                                        "gameName": "BGMI",
-                                        "gameImage": "https://metaninzamedia.blob.core.windows.net/media/games/20260209131841_8be0463e43471d299608f26d92555064.webp",
-                                        "joinedAt": "2026-02-09T13:22:47.392121Z",
+                                        "teamId": "b12527ac-34c4-49a5-883e-682f93c51256",
+                                        "name": "Phoenix_Rising",
+                                        "description": null,
+                                        "teamSize": 4,
+                                        "ownerId": "1869dfa2-e04e-4d4d-8fe6-fa168d90458a",
+                                        "ownerName": "DragonSlayer",
+                                        "logo": "https://api.dicebear.com/7.x/identicon/svg?seed=Phoenix",
+                                        "coverImage": null,
+                                        "gameId": "70383923-1d87-45ff-b2e5-9303e607818b",
+                                        "gameName": "Free Fire",
+                                        "gameImage": "https://metaninzamedia.blob.core.windows.net/media/games/20260210065312_free-fire-logo-png_seeklogo-624195.webp",
                                         "members": [
                                             {
-                                                "userId": "302cb943-26a3-40e1-92f4-216ac2b264d7",
+                                                "userId": "1869dfa2-e04e-4d4d-8fe6-fa168d90458a",
+                                                "externalId": null,
                                                 "email": "",
-                                                "username": "dhruvpatel",
+                                                "username": "dragonslayer_bc24ba",
                                                 "role": 1,
-                                                "joinedAt": "2026-02-09T13:22:47.392121Z",
+                                                "joinedAt": "2026-02-10T07:04:35.165578Z",
                                                 "profileImage": null,
-                                                "gameId": "3b1dd428-f288-4654-beff-ae523005f47a",
-                                                "userGameId": "bossxdhruv"
+                                                "gameId": "70383923-1d87-45ff-b2e5-9303e607818b",
+                                                "userGameId": "DragonSlayer"
+                                            },
+                                            {
+                                                "userId": "2dd31522-8ca3-4578-8b8f-45a0502ab1ce",
+                                                "externalId": null,
+                                                "email": "",
+                                                "username": "icequeen_c184c5",
+                                                "role": 3,
+                                                "joinedAt": "2026-02-10T07:04:35.165578Z",
+                                                "profileImage": null,
+                                                "gameId": "70383923-1d87-45ff-b2e5-9303e607818b",
+                                                "userGameId": "IceQueen"
+                                            },
+                                            {
+                                                "userId": "9e029a35-6590-4bbd-a214-7e82cf24c30b",
+                                                "externalId": null,
+                                                "email": "",
+                                                "username": "shadowninja_eda2bd",
+                                                "role": 3,
+                                                "joinedAt": "2026-02-10T07:04:35.165578Z",
+                                                "profileImage": null,
+                                                "gameId": "70383923-1d87-45ff-b2e5-9303e607818b",
+                                                "userGameId": "ShadowNinja"
+                                            },
+                                            {
+                                                "userId": "5f84c483-0b97-485a-b6c5-30dc560087f3",
+                                                "externalId": null,
+                                                "email": "",
+                                                "username": "thunderbolt_486936",
+                                                "role": 3,
+                                                "joinedAt": "2026-02-10T07:04:35.165578Z",
+                                                "profileImage": null,
+                                                "gameId": "70383923-1d87-45ff-b2e5-9303e607818b",
+                                                "userGameId": "ThunderBolt"
                                             }
                                         ]
                                     },
                                     "meta": {
-                                        "traceId": "00-30eb584edc33d3b3c6abc2f2a48d531b-c7db91fb01d98955-00",
-                                        "elapsedMs": 15.5,
-                                        "serverTimestamp": "2026-02-09T13:25:26.0306215Z"
+                                        "traceId": "00-2e4dca3267c950b579bfb0ce6b379070-458a412b8c8e329e-00",
+                                        "elapsedMs": 4.42,
+                                        "serverTimestamp": "2026-02-17T10:29:58.3046903Z"
                                     }
                                 }
                             }
@@ -1221,6 +1257,12 @@
                         "description": "Unique identifier for the user",
                         "example": "302cb943-26a3-40e1-92f4-216ac2b264d7"
                     },
+                    "externalId": {
+                        "type": "string",
+                        "description": "External identifier for the user",
+                        "nullable": true,
+                        "example": null
+                    },
                     "email": {
                         "type": "string",
                         "format": "email",
@@ -1377,7 +1419,7 @@
                         "example": "Team retrieved successfully"
                     },
                     "data": {
-                        "$ref": "#/components/schemas/TeamWithMembers"
+                        "$ref": "#/components/schemas/TeamDetail"
                     },
                     "meta": {
                         "type": "object",
@@ -1530,7 +1572,7 @@
                     }
                 }
             },
-            "UpdatedTeamDetails": {
+            "TeamDetail": {
                 "type": "object",
                 "properties": {
                     "teamId": {
@@ -1591,7 +1633,7 @@
                         "type": "string"
                     },
                     "data": {
-                        "$ref": "#/components/schemas/UpdatedTeamDetails"
+                        "$ref": "#/components/schemas/TeamDetail"
                     },
                     "meta": {
                         "type": "object",

@@ -62,6 +62,181 @@
                     }
                 }
             }
+        },
+        "/rounds/{roundId}": {
+            "get": {
+                "summary": "Get Round",
+                "description": "Fetch details of a specific round by its ID.",
+                "operationId": "getRound",
+                "parameters": [
+                    {
+                        "name": "roundId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "The unique identifier of the round."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tournament round fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetRoundResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Tournament round fetched successfully",
+                                    "data": {
+                                        "id": "44accbab-48f7-4fe0-8085-df45903863a8",
+                                        "tournamentId": "788f9b9d-1aec-4dec-b2fc-d585a6ef149f",
+                                        "tournamentName": "Fortnite 2026",
+                                        "roundName": "Round 1 (Normal)",
+                                        "description": "",
+                                        "teamCount": 4,
+                                        "matchesPerGroup": 2,
+                                        "startDate": "2026-02-10T07:49:51.364271Z",
+                                        "endDate": "2026-02-11T07:49:51.364271Z",
+                                        "roundType": 1,
+                                        "status": 4,
+                                        "numberOfMatches": 4
+                                    },
+                                    "meta": {
+                                        "traceId": "00-ecf9d778c620a1b9162cfcf68e334e22-cab3c6a593170e4c-00",
+                                        "elapsedMs": 4.02,
+                                        "serverTimestamp": "2026-02-17T12:25:20.4511293Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups": {
+            "get": {
+                "summary": "Get Groups",
+                "description": "Fetch a list of groups for a specific round.",
+                "operationId": "getGroups",
+                "parameters": [
+                    {
+                        "name": "RoundId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "The unique identifier of the round to fetch groups for."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tournament groups fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetGroupsResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Tournament groups fetched successfully",
+                                    "data": {
+                                        "items": [
+                                            {
+                                                "id": "61e28f2f-367a-4cfc-8488-3a3aa4e4e04e",
+                                                "tournamentRoundId": "44accbab-48f7-4fe0-8085-df45903863a8",
+                                                "groupName": "Group 2",
+                                                "maxParticipants": 2,
+                                                "participantCount": 1,
+                                                "versions": [
+                                                    1
+                                                ]
+                                            },
+                                            {
+                                                "id": "ee6c62d0-0802-4327-9961-5ed446f5702f",
+                                                "tournamentRoundId": "44accbab-48f7-4fe0-8085-df45903863a8",
+                                                "groupName": "Group 1",
+                                                "maxParticipants": 2,
+                                                "participantCount": 1,
+                                                "versions": [
+                                                    1
+                                                ]
+                                            }
+                                        ],
+                                        "totalCount": 2,
+                                        "pageNumber": 1,
+                                        "pageSize": 20,
+                                        "totalPages": 1
+                                    },
+                                    "meta": {
+                                        "traceId": "00-6d8642838e87422cf7542f4ffd03d43c-12bb91840eab74d5-00",
+                                        "elapsedMs": 5.19,
+                                        "serverTimestamp": "2026-02-17T12:23:19.2748999Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupId}": {
+            "get": {
+                "summary": "Get Group",
+                "description": "Fetch details of a specific group by its ID.",
+                "operationId": "getGroup",
+                "parameters": [
+                    {
+                        "name": "groupId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "The unique identifier of the group."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tournament group fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetGroupResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Tournament group fetched successfully",
+                                    "data": {
+                                        "id": "ee6c62d0-0802-4327-9961-5ed446f5702f",
+                                        "tournamentRoundId": "44accbab-48f7-4fe0-8085-df45903863a8",
+                                        "tournamentId": "788f9b9d-1aec-4dec-b2fc-d585a6ef149f",
+                                        "tournamentRoundName": "Round 1 (Normal)",
+                                        "groupName": "Group 1",
+                                        "maxParticipants": 2,
+                                        "version": 1,
+                                        "versions": [
+                                            1
+                                        ],
+                                        "participantCount": 1
+                                    },
+                                    "meta": {
+                                        "traceId": "00-b28a7ad18702b35a84e00477b68e2dc6-9e696eec1771c68e-00",
+                                        "elapsedMs": 9.41,
+                                        "serverTimestamp": "2026-02-17T12:26:14.0638194Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -188,6 +363,189 @@
                     "numberOfMatches": {
                         "type": "integer",
                         "example": 1
+                    }
+                }
+            },
+            "GetRoundResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/RoundDetail"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "RoundDetail": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tournamentId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tournamentName": {
+                        "type": "string"
+                    },
+                    "roundName": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "teamCount": {
+                        "type": "integer"
+                    },
+                    "matchesPerGroup": {
+                        "type": "integer"
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "roundType": {
+                        "type": "integer"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "numberOfMatches": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "GetGroupsResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/GroupItem"
+                                }
+                            },
+                            "totalCount": {
+                                "type": "integer"
+                            },
+                            "pageNumber": {
+                                "type": "integer"
+                            },
+                            "pageSize": {
+                                "type": "integer"
+                            },
+                            "totalPages": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "GroupItem": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tournamentRoundId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "groupName": {
+                        "type": "string"
+                    },
+                    "maxParticipants": {
+                        "type": "integer"
+                    },
+                    "participantCount": {
+                        "type": "integer"
+                    },
+                    "versions": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            },
+            "GetGroupResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/GroupDetail"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    }
+                }
+            },
+            "GroupDetail": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tournamentRoundId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tournamentId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tournamentRoundName": {
+                        "type": "string"
+                    },
+                    "groupName": {
+                        "type": "string"
+                    },
+                    "maxParticipants": {
+                        "type": "integer"
+                    },
+                    "version": {
+                        "type": "integer"
+                    },
+                    "versions": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "participantCount": {
+                        "type": "integer"
                     }
                 }
             }

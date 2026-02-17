@@ -65,11 +65,19 @@
             "openapi": "api-reference/tournaments/openapi.json"
           },
           {
+            "group": "Matches",
+            "openapi": "api-reference/matches/openapi.json"
+          },
+          {
+            "group": "Assigned Data",
+            "openapi": "api-reference/assigned-data/openapi.json"
+          },
+          {
             "group": "Tournament Registrations",
             "openapi": "api-reference/tournament-registrations/openapi.json"
           },
           {
-            "group": "Rounds",
+            "group": "Rounds & Groups",
             "openapi": "api-reference/rounds/openapi.json"
           },
           {

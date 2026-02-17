@@ -141,84 +141,6 @@
                 }
             }
         },
-        "/tournaments/me": {
-            "get": {
-                "summary": "Get My Tournaments",
-                "description": "Fetch a list of tournaments that the user has joined.",
-                "operationId": "getMyTournaments",
-                "parameters": [
-                    {
-                        "name": "externalId",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "External ID of the user."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User participated tournaments fetched successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/GetMyTournamentsResponse"
-                                },
-                                "example": {
-                                    "success": true,
-                                    "message": "User participated tournaments fetched successfully",
-                                    "data": [
-                                        {
-                                            "tournamentId": "d39102c1-a8af-4ecb-9f99-8b0fe8fe993b",
-                                            "tournamentName": "Call of Duty Mobile tournament",
-                                            "gameId": "bbbcaf40-b0f0-4da6-a934-15575e2e51ea",
-                                            "gameName": "Call of Duty",
-                                            "description": "cod tournament",
-                                            "enrollmentLimit": 64,
-                                            "maxTeamMembers": 4,
-                                            "minTeamMembers": 4,
-                                            "startTime": "2026-02-18T08:37:00Z",
-                                            "endTime": "2026-02-19T08:37:00Z",
-                                            "registrationDeadline": "2026-02-17T07:37:00Z",
-                                            "registrationOpen": true,
-                                            "isOnline": true,
-                                            "status": 3,
-                                            "matchType": 1,
-                                            "teamType": "squad",
-                                            "color": "#6b7280",
-                                            "prizePool": 0,
-                                            "entryFee": 0,
-                                            "image": "https://metaninzamedia.blob.core.windows.net/media/tournaments/20260210073717_images %2816%29.webp",
-                                            "coverImage": "https://metaninzamedia.blob.core.windows.net/media/tournaments/20260210073722_images %2817%29.webp",
-                                            "isTrending": false,
-                                            "isFeatured": false,
-                                            "isPasswordProtected": false,
-                                            "instantRegistrations": true,
-                                            "entryFeeCurrencyId": "f64a0486-f7cd-48d8-b449-25dc6cc02065",
-                                            "entryFeeCurrencyName": "Ninza Coins",
-                                            "entryFeeCurrencySymbol": "%",
-                                            "prizePoolCurrencyId": "f64a0486-f7cd-48d8-b449-25dc6cc02065",
-                                            "prizePoolCurrencyName": "Ninza Coins",
-                                            "prizePoolCurrencySymbol": "%",
-                                            "hasJoined": true,
-                                            "canJoin": false,
-                                            "cannotJoinReason": "Team already joined",
-                                            "teamsJoinedCount": 12
-                                        }
-                                    ],
-                                    "meta": {
-                                        "traceId": "00-e0cb1029b70258b31400d19a862f3e7e-ac616f4c8b144ec1-00",
-                                        "elapsedMs": 10.06,
-                                        "serverTimestamp": "2026-02-16T12:24:23.5376826Z"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/tournaments/{id}": {
             "get": {
                 "summary": "Get Tournament Details",
@@ -518,6 +440,16 @@
                             "format": "int32"
                         },
                         "description": "Number of items per page"
+                    },
+                    {
+                        "name": "GroupVersion",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "description": "Filter by Group Version"
                     }
                 ],
                 "responses": {
@@ -527,6 +459,49 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/GetTournamentParticipantsResponse"
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Tournament participants fetched successfully",
+                                    "data": {
+                                        "items": [
+                                            {
+                                                "tournamentParticipantId": "cbf13f1e-573e-42b7-abef-a164287b40d2",
+                                                "tournamentId": "68b5b039-2183-421c-9b47-b937e4736d25",
+                                                "tournamentName": "Free Fire Clash",
+                                                "participantId": "b12527ac-34c4-49a5-883e-682f93c51256",
+                                                "participantType": 1,
+                                                "participantName": "Phoenix_Rising",
+                                                "participantLogo": "https://api.dicebear.com/7.x/identicon/svg?seed=Phoenix",
+                                                "joinedAt": "2026-02-10T07:04:35.198734Z",
+                                                "totalMemberCount": 4,
+                                                "externalId": null,
+                                                "isMe": null
+                                            },
+                                            {
+                                                "tournamentParticipantId": "af51251d-7d9a-498e-973e-3f358e63ea57",
+                                                "tournamentId": "68b5b039-2183-421c-9b47-b937e4736d25",
+                                                "tournamentName": "Free Fire Clash",
+                                                "participantId": "f661cc49-19f4-4b0a-a167-8b596bc8ad8e",
+                                                "participantType": 1,
+                                                "participantName": "Dark_Knights",
+                                                "participantLogo": "https://api.dicebear.com/7.x/identicon/svg?seed=Knights",
+                                                "joinedAt": "2026-02-10T07:04:35.477279Z",
+                                                "totalMemberCount": 4,
+                                                "externalId": null,
+                                                "isMe": null
+                                            }
+                                        ],
+                                        "totalCount": 2,
+                                        "pageNumber": 1,
+                                        "pageSize": 20,
+                                        "totalPages": 1
+                                    },
+                                    "meta": {
+                                        "traceId": "00-b32b8151b4c1dd831fda494a00e06c50-1f3de4ce8a71005b-00",
+                                        "elapsedMs": 27.86,
+                                        "serverTimestamp": "2026-02-17T10:17:41.979395Z"
+                                    }
                                 }
                             }
                         }
@@ -1062,26 +1037,6 @@
                     }
                 }
             },
-            "GetMyTournamentsResponse": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/TournamentItem"
-                        }
-                    },
-                    "meta": {
-                        "$ref": "#/components/schemas/Meta"
-                    }
-                }
-            },
             "GetTournamentParticipantsResponse": {
                 "type": "object",
                 "properties": {
@@ -1166,9 +1121,15 @@
                         "type": "integer",
                         "example": 4
                     },
+                    "externalId": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
                     "isMe": {
                         "type": "boolean",
-                        "example": false
+                        "nullable": true,
+                        "example": null
                     }
                 }
             }
