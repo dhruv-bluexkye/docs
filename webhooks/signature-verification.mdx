@@ -1,0 +1,181 @@
+---
+title: "Webhook Secret Key & Verification Guide"
+description: "How to secure and verify incoming webhook requests from 16Arena."
+sidebarTitle: "Signature Verification"
+---
+
+## Overview
+
+When 16Arena sends an event to your webhook URL, you can optionally use a **Secret Key** to verify that the request is authentic and has not been tampered with. The system signs each payload with HMAC-SHA256 and sends it in a header you can verify.
+
+| Item | Purpose |
+|------|---------|
+| **API Key** | Authenticates *your* requests when you call 16Arena's API |
+| **Webhook Secret** | Verifies that incoming webhook requests *to you* are from 16Arena |
+
+<Warning>
+**Important:** Do not use your API Key as the webhook secret. Use a separate, unique secret for webhooks.
+</Warning>
+
+---
+
+## 1. Setting the Secret Key
+
+The secret key is optional. Set it when **updating** a webhook configuration:
+
+**PUT** `/api/v1/webhooks/{id}`  
+**PUT** `/api/v1/external/webhooks/{id}` (with API Key)
+
+**Request body:**
+```json
+{
+  "secretKey": "your-unique-secret-at-least-32-chars"
+}
+```
+
+- Use a strong, random string (e.g. 32+ characters)
+- Store it securely in your environment/config
+- Once set, 16Arena includes `X-Webhook-Signature` in every webhook POST
+
+---
+
+## 2. What You Receive
+
+Each webhook request includes:
+
+| Header | Value | Description |
+|--------|-------|-------------|
+| `Content-Type` | `application/json` | Payload format |
+| `X-Webhook-Signature` | `sha256={hex}` | HMAC-SHA256 of raw body using your secret |
+| `X-Webhook-Id` | `{guid}` | Delivery ID for logging/debugging |
+
+**Payload (body):** JSON with `event`, `eventId`, `timestamp`, `tenantId`, `data`.
+
+---
+
+## 3. Verifying the Signature
+
+Use the **raw request body** (before JSON parsing) and your secret to compute the expected signature. Compare with `X-Webhook-Signature`.
+
+### Algorithm
+```
+signature = "sha256=" + HMAC-SHA256(raw_body, secret_key)
+```
+
+<CodeGroup>
+
+```csharp C# (ASP.NET Core)
+var signature = Request.Headers["X-Webhook-Signature"].FirstOrDefault();
+var rawBody = await new StreamReader(Request.Body).ReadToEndAsync();
+
+using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secretKey));
+var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(rawBody));
+var expected = "sha256=" + Convert.ToHexString(hash).ToLowerInvariant();
+
+if (signature == expected)
+{
+    var payload = JsonSerializer.Deserialize<WebhookPayload>(rawBody);
+    // Process webhook...
+    return Ok();
+}
+return Unauthorized();
+```
+
+```javascript Node.js (Express)
+const crypto = require('crypto');
+
+app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+  const rawBody = req.body.toString();
+  const signature = req.headers['x-webhook-signature'];
+  const expected = 'sha256=' + crypto
+    .createHmac('sha256', secretKey)
+    .update(rawBody)
+    .digest('hex');
+
+  if (crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) {
+    const payload = JSON.parse(rawBody);
+    // Process webhook...
+    res.status(200).send('OK');
+  } else {
+    res.status(401).send('Invalid signature');
+  }
+});
+```
+
+```python Python (Flask)
+import hmac
+import hashlib
+
+def verify_webhook(body: bytes, signature: str, secret: str) -> bool:
+    expected = "sha256=" + hmac.new(
+        secret.encode(), body, hashlib.sha256
+    ).hexdigest()
+    return hmac.compare_digest(signature, expected)
+
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    body = request.get_data()
+    sig = request.headers.get('X-Webhook-Signature', '')
+    if not verify_webhook(body, sig, WEBHOOK_SECRET):
+        return '', 401
+    payload = request.get_json()
+    # Process webhook...
+    return '', 200
+```
+
+</CodeGroup>
+
+<Note>
+**Note:** Read the body once. If you parse JSON first, the stream may be consumed. Configure middleware to allow re-reading the raw body if needed.
+</Note>
+
+---
+
+## 4. Testing
+
+### Built-in test endpoint
+
+Send a test webhook from 16Arena to your URL:
+
+**POST** `/api/v1/webhooks/{id}/test`  
+**POST** `/api/v1/external/webhooks/{id}/test`
+
+**Request body:**
+```json
+{
+  "eventType": "test.ping",
+  "testData": { "message": "Hello" }
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "responseBody": "...",
+  "durationMs": 150
+}
+```
+
+### Using webhook.site
+
+1. Go to [webhook.site](https://webhook.site) and copy your unique URL
+2. Create or update a webhook with that URL
+3. Call the test endpoint above
+4. On webhook.site, check the request:
+   - Body: JSON payload
+   - Headers: `X-Webhook-Signature` should be present when secret key is set
+
+---
+
+## 5. Summary
+
+| Step | Action |
+|------|--------|
+| 1 | Set `secretKey` via `PUT /api/v1/webhooks/{id}` (optional) |
+| 2 | Store the secret securely in your app config |
+| 3 | On each webhook request, verify `X-Webhook-Signature` using raw body + secret |
+| 4 | Use `POST /api/v1/webhooks/{id}/test` to verify end-to-end |
+
+If you omit the secret key, no signature is sent. Your endpoint will still receive webhooks, but you won't be able to cryptographically verify their origin.
