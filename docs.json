@@ -34,6 +34,7 @@
               "guides/integration/user-flow",
               "guides/integration/general-api-flow",
               "guides/integration/tournament-registration",
+              "guides/integration/after-registration",
               "guides/integration/bracket-viewer"
             ]
           }
