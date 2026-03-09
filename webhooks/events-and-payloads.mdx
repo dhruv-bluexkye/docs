@@ -48,16 +48,19 @@ Use the list below to jump to a specific event. Events are grouped by category; 
 - [tournament.player.joined](#tournamentplayerjoined) — Player joined tournament
 - [tournament.team.joined](#tournamentteamjoined) — Team joined tournament
 
-**Assignments**
-- [tournament.round.participant.assigned](#tournamentroundparticipantassigned) — Participants assigned to round
-- [tournament.round.participant.removed](#tournamentroundparticipantremoved) — Participant removed from round
-- [tournament.group.participant.assigned](#tournamentgroupparticipantassigned) — Participants assigned to group
-- [tournament.group.participant.removed](#tournamentgroupparticipantremoved) — Participant removed from group
+**Assignments & Placements**
+- [participant.assigned](#participantassigned) — Participant assigned to a match, round, or group
+- [participant.removed](#participantremoved) — Participant removed from a round/group
+
+**Match Lifecycle**
 - [match.created](#matchcreated) — Match created
 - [match.updated](#matchupdated) — Match updated
-- [match.participant.assigned](#matchparticipantassigned) — Participant assigned to match
+
+**Tournaments**
+- [tournament.published](#tournamentpublished) — Tournament published
 
 **Match announcements**
+- [id.pass.announcement](#idpassannouncement) — Room ID and credentials for a match
 - [match.announcement](#matchannouncement) — Announcement to a match
 
 **Tournament-related announcements**
@@ -156,11 +159,11 @@ Use the list below to jump to a specific event. Events are grouped by category; 
 
 ---
 
-## Assignments
+## Assignments & Placements
 
-### tournament.round.participant.assigned
+### participant.assigned
 
-**When:** One or more participants are assigned to a round (e.g. bracket slots).
+**When:** Participants are assigned to a specific round, group, or match.
 
 **Payload `data`:**
 
@@ -168,79 +171,83 @@ Use the list below to jump to a specific event. Events are grouped by category; 
 |------------------|--------|--------------------------------------|
 | `tournamentId`   | string | UUID of the tournament               |
 | `roundId`        | string | UUID of the round                    |
-| `roundName`      | string | Round display name                   |
-| `participantIds` | array  | List of UUIDs of assigned participants |
-| `participantType`| string | `"Player"` or `"Team"`              |
+| `roundName`      | string | Round display name (if round/group context) |
+| `groupId`        | string | UUID of the group (if group context) |
+| `groupName`      | string | Group display name (if group context)|
+| `matchId`        | string | UUID of the match (if match context) |
+| `participantIds` | array  | List of UUIDs of assigned participants (not present in match context) |
+| `participantType`| string | `"User"` or `"Team"`                 |
+| `status`         | string | Match type/status (if match context) |
 
-**Example `data`:**
+**Example `data` (Round context):**
 
 ```json
 {
-  "tournamentId": "t1t2t3t4-t5t6-7890-tour-nament1234567",
-  "roundId": "ro1ro2ro3-ro4-ro5-7890-round12345678",
+  "tournamentId": "22222222-2222-2222-2222-222222222222",
+  "roundId": "55555555-5555-5555-5555-555555555555",
   "roundName": "Round 1",
-  "participantIds": ["p1p2p3p4-p5p6-7890-play-er1234567890", "p2p3p4p5-p6p7-8901-laye-r2345678901"],
+  "participantIds": [
+    "66666666-6666-6666-6666-666666666666",
+    "77777777-7777-7777-7777-777777777777"
+  ],
   "participantType": "Team"
 }
 ```
 
+**Example `data` (Group context):**
+
+```json
+{
+  "tournamentId": "22222222-2222-2222-2222-222222222222",
+  "groupId": "88888888-8888-8888-8888-888888888888",
+  "groupName": "Group A",
+  "roundId": "55555555-5555-5555-5555-555555555555",
+  "participantIds": [
+    "66666666-6666-6666-6666-666666666666"
+  ],
+  "participantType": "User"
+}
+```
+
+**Example `data` (Match context):**
+
+```json
+{
+  "matchId": "33333333-3333-3333-3333-333333333333",
+  "tournamentId": "22222222-2222-2222-2222-222222222222",
+  "roundId": "55555555-5555-5555-5555-555555555555",
+  "status": "Duel"
+}
+```
+
+<Info>
+The shape of `participant.assigned` changes depending on the context of the assignment. If assigned directly to a match, the `matchId` is included but `participantIds` might be omitted from the payload until the match specifically tracks them.
+</Info>
+
 ---
 
-### tournament.round.participant.removed
+### participant.removed
 
-**When:** A participant is removed from a round.
-
-**Payload `data`:** Same structure as `tournament.round.participant.assigned`; `participantIds` contains only the removed participant(s).
-
-| Field             | Type   | Description                          |
-|------------------|--------|--------------------------------------|
-| `tournamentId`   | string | UUID of the tournament               |
-| `roundId`        | string | UUID of the round                    |
-| `roundName`      | string | Round display name                   |
-| `participantIds` | array  | List of UUIDs (removed participants)|
-| `participantType`| string | `"Player"` or `"Team"`              |
-
----
-
-### tournament.group.participant.assigned
-
-**When:** Participants are assigned to a group (e.g. league group).
-
-**Payload `data`:**
-
-| Field             | Type   | Description                          |
-|------------------|--------|--------------------------------------|
-| `tournamentId`   | string | UUID of the tournament               |
-| `groupId`        | string | UUID of the group                    |
-| `groupName`      | string | Group display name                   |
-| `roundId`        | string | UUID of the round this group belongs to |
-| `participantIds` | array  | List of UUIDs of assigned participants |
-| `participantType`| string | `"Player"` or `"Team"`              |
+**When:** A participant is removed from a round or group.
 
 **Example `data`:**
 
 ```json
 {
-  "tournamentId": "t1t2t3t4-t5t6-7890-tour-nament1234567",
-  "groupId": "g1g2g3g4-g5g6-7890-grou-p1234567890",
+  "tournamentId": "22222222-2222-2222-2222-222222222222",
+  "groupId": "88888888-8888-8888-8888-888888888888",
   "groupName": "Group A",
-  "roundId": "ro1ro2ro3-ro4-ro5-7890-round12345678",
-  "participantIds": ["p1p2p3p4-p5p6-7890-play-er1234567890"],
+  "roundId": "55555555-5555-5555-5555-555555555555",
+  "participantIds": [
+    "66666666-6666-6666-6666-666666666666"
+  ],
   "participantType": "Team"
 }
 ```
 
 ---
 
-### tournament.group.participant.removed
-
-**When:** A participant is removed from a group.
-
-**Payload `data`:** Same structure as `tournament.group.participant.assigned`; `participantIds` lists the removed participant(s).
-
----
-
-### match.created
+## Match Lifecycle
 
 **When:** A match is created (e.g. in a round).
 
@@ -285,22 +292,59 @@ For `match.created`, `status` is currently the match type (e.g. `SingleEliminati
 
 ---
 
-### match.participant.assigned
+---
 
-**When:** A participant (player/team) is assigned to a match slot.
+## Tournaments
 
-**Payload `data`:** Same shape as `match.created` / `match.updated` (tournamentId, matchId, roundId, status).
+### tournament.published
+
+**When:** A tournament successfully published making it publicly available to users.
+
+**Payload `data`:**
+
+| Field          | Type   | Description                |
+|---------------|--------|----------------------------|
+| `tournamentId`| string | UUID of the tournament     |
+| `tournamentName` | string | Name of the tournament |
+| `status`      | string | Status of tournament publication |
+
+**Example `data`:**
+
+```json
+{
+  "tournamentId": "22222222-2222-2222-2222-222222222222",
+  "tournamentName": "Spring Championship",
+  "status": "Published"
+}
+```
+
+---
+
+## Match announcements
+
+### id.pass.announcement
+
+**When:** Match targeted announcement specifically meant to share room ID and password details or joining credentials.
+
+**Payload `data`:**
 
 | Field          | Type   | Description                |
 |---------------|--------|----------------------------|
 | `tournamentId`| string | UUID of the tournament     |
 | `matchId`     | string | UUID of the match          |
-| `roundId`     | string | UUID of the round (if any) |
-| `status`      | string | Match type (e.g. `SingleElimination`) |
+| `messageContent`| string | Room ID and credentials   |
+| `senderId`    | string | UUID of the sender         |
 
----
+**Example `data`:**
 
-## Match announcements
+```json
+{
+  "tournamentId": "22222222-2222-2222-2222-222222222222",
+  "matchId": "33333333-3333-3333-3333-333333333333",
+  "messageContent": "Room ID: 123456, PASS: abcd",
+  "senderId": "44444444-4444-4444-4444-444444444444"
+}
+```
 
 ### match.announcement
 
