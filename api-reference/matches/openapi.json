@@ -17,7 +17,7 @@
         }
     ],
     "paths": {
-        "/tournaments/{tournamentId}/duel-standings": {
+        "/matches/duel": {
             "get": {
                 "summary": "Get Duel Matches",
                 "description": "Fetch a list of duel matches for a specific tournament.",
@@ -25,7 +25,7 @@
                 "parameters": [
                     {
                         "name": "tournamentId",
-                        "in": "path",
+                        "in": "query",
                         "required": true,
                         "schema": {
                             "type": "string",
