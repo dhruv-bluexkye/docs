@@ -1,0 +1,239 @@
+---
+title: "16Arena webhooks — developer guide"
+description: "HTTP contract, default JSON payload, data mapping, and per-event fields for backend and integration developers."
+sidebarTitle: "Developer guide"
+---
+
+Share this document with backend and integration developers. It describes how outgoing webhooks work, the HTTP contract, the **default JSON payload**, and **per-event `data` fields** as implemented in the API.
+
+For **example JSON bodies** per event, see [Events and payloads](/webhooks/events-and-payloads). For **HMAC verification** steps and API paths, see [Signature verification](/webhooks/signature-verification).
+
+---
+
+## 1. What are webhooks?
+
+When certain actions happen in 16Arena (for example a match is updated or a player joins a tournament), the system can **POST an HTTP request** to URLs you configure. Your server receives a JSON body and can react without polling the REST API.
+
+- Delivery is **asynchronous** (queued; retries on failure).
+- You choose which **event types** each webhook subscribes to.
+- Payload can use the **default** format or a **custom** JSON template (see §7).
+
+---
+
+## 2. Subscribing to events
+
+Webhook configurations are stored per **tenant**. Each configuration includes:
+
+- **Webhook URL** (HTTPS recommended for production)
+- **Events** — array of event type strings (must be from the supported list in §10)
+- Optional: **secret key** (HMAC signature), **custom headers**, **retry/timeouts**, **custom payload template**
+
+Only configurations where `events` **contains** the dispatched event type will receive that event.
+
+---
+
+## 3. HTTP request your endpoint receives
+
+| Item | Value |
+|------|--------|
+| **Method** | `POST` |
+| **Content-Type** | `application/json` |
+| **Body** | JSON (default structure in §4, unless `payloadFormat` is `custom`) |
+| **Headers** | Your configured optional headers, plus: |
+| `X-Webhook-Id` | Unique delivery / log identifier (use for idempotency) |
+| `X-Webhook-Signature` | Present when a **secret key** is set — see §8 |
+
+Your endpoint should return **HTTP 2xx** quickly (process heavy work after responding).
+
+---
+
+## 4. Default payload envelope (JSON)
+
+With **default** payload format, the body is a single object:
+
+```json
+{
+  "event": "match.updated",
+  "eventId": "unique-guid-string",
+  "timestamp": "2025-03-19T12:00:00.0000000Z",
+  "tenantId": "tenant-guid",
+  "data": { }
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `event` | string | Same as the event type (e.g. `tournament.updated`) |
+| `eventId` | string | New GUID per delivery; use with `X-Webhook-Id` for deduplication |
+| `timestamp` | string | ISO 8601 (UTC) when the event was built |
+| `tenantId` | string | Tenant that owns the webhook / resource |
+| `data` | object | Event-specific fields (see §5–6). **Null / empty properties are omitted** from JSON |
+
+---
+
+## 5. How `data` is built (default format)
+
+The API maps an internal `Data` dictionary into **`data`** using known keys. Only mapped keys become properties on `data`. Common mappings:
+
+| Internal key | `data` property | Type in JSON |
+|--------------|-----------------|--------------|
+| `tournamentId` | `tournamentId` | GUID (from root `TournamentId` or dictionary) |
+| `tournamentName` | `tournamentName` | string |
+| `participantId` | `participantId` | GUID |
+| `participantType` | `participantType` | string (e.g. `Team`, `Player`) |
+| `participantIds` | `participantIds` | array of GUIDs (comma-separated string in source is parsed) |
+| `participantName` | `participantName` | string |
+| `teamId` | `teamId` | GUID |
+| `teamName` | `teamName` | string |
+| `userId` | `userId` | GUID |
+| `userName` | `userName` | string |
+| `roundId` | `roundId` | GUID |
+| `roundName` | `roundName` | string |
+| `groupId` | `groupId` | GUID |
+| `groupName` | `groupName` | string |
+| `matchId` | `matchId` | GUID |
+| `status` | `status` | string |
+| `registrationId` | `registrationId` | GUID |
+| `registrationStatus` | `registrationStatus` | string |
+| `messageContent` | `messageContent` | string |
+| `senderId` | `senderId` | GUID |
+| `externalId` | `externalId` | string (from DTO when set) |
+
+**Note:** Keys that are **not** in this mapping (for example some internal-only strings) may **not** appear in the default `data` object. If you need arbitrary fields in the outgoing JSON, use a **custom payload template** (§7).
+
+---
+
+## 6. Per-event: trigger summary and typical `data` fields
+
+Below: **typical** `data` content for the default format. Empty or omitted keys are not sent.
+
+### Team
+
+| Event | When it fires | Typical `data` |
+|-------|----------------|----------------|
+| `team.member.joined` | User joins a team | `teamId`, `teamName`, `userId`, `userName` |
+| `team.member.removed` | User removed from a team | `teamId`, `teamName`, `userId`, `userName` |
+
+Root `tournamentId` is usually not set for team events.
+
+### Tournament
+
+| Event | When it fires | Typical `data` |
+|-------|----------------|----------------|
+| `tournament.published` | Tournament **created** (API still uses this event name) | `tournamentId`, `tournamentName`, `status` |
+| `tournament.updated` | Tournament updated | `tournamentId`, `tournamentName`, `status` |
+| `tournament.player.joined` | Solo registration auto-approved | `tournamentId`, `participantId`, `participantType`, `registrationId`, `registrationStatus` + duplicate ids in `data` |
+| `tournament.team.joined` | Team registration auto-approved | Same shape as player joined |
+
+### Round and group (structure)
+
+| Event | When it fires | Typical `data` |
+|-------|----------------|----------------|
+| `round.created` | Round created (simple or with structure) | `tournamentId`, `roundId`, `roundName`, `status` |
+| `round.updated` | Round updated | `tournamentId`, `roundId`, `roundName`, `status` |
+| `group.created` | Group created (e.g. with round structure) | `tournamentId`, `roundId`, `groupId`, `groupName` |
+| `group.updated` | Group updated | `tournamentId`, `roundId`, `groupId`, `groupName` |
+
+### Match
+
+| Event | When it fires | Typical `data` |
+|-------|----------------|----------------|
+| `match.created` | Match created (API or bulk with round structure) | `matchId`, `tournamentId`, `roundId`, `status` |
+| `match.updated` | Match updated | `matchId`, `tournamentId`, `roundId`, `status` |
+
+### Participant assignment (context-specific)
+
+| Event | When it fires | Typical `data` |
+|-------|----------------|----------------|
+| `participant.assigned.round` | Participants assigned to a **round** | `tournamentId`, `roundId`, `roundName`, `participantIds` (array), `participantType` |
+| `participant.removed.round` | Participant removed from a **round** | Same shape; `participantIds` typically one id |
+| `participant.assigned.group` | Participants assigned to a **group** | `tournamentId`, `groupId`, `groupName`, `roundId`, `participantIds`, `participantType` |
+| `participant.removed.group` | Participant removed from a **group** | Same shape |
+| `participant.assigned.match` | Participants assigned to a **match** | `matchId`, `tournamentId`, `roundId`, `status` (match-related string) |
+| `participant.removed.match` | Participant removed from a **match** | Same shape |
+
+### Announcements (tournament chat)
+
+| Event | When it fires | Typical `data` |
+|-------|----------------|----------------|
+| `tournament.announcement` | Tournament-wide chat message | `tournamentId`, `messageContent`, `senderId` |
+| `round.announcement` | Round-targeted message | above + `roundId` |
+| `group.announcement` | Group-targeted message | above + `groupId` |
+| `match.announcement` | Match-targeted message | above + `matchId` |
+| `id.pass.announcement` | ID/pass style message (`RoomId` type) | `tournamentId`, `messageContent`, `senderId`, and one of `matchId` / `groupId` / `roundId` if targeted |
+
+---
+
+## 7. Custom payload format
+
+If the webhook configuration uses `payloadFormat: "custom"` and a `customPayloadTemplate` (JSON string), placeholders like `{{eventType}}`, `{{tournamentId}}`, `{{matchId}}`, and so on are replaced from the event and `Data` dictionary. The result is sent as the body (must be valid JSON if your consumer expects JSON).
+
+Use this when you need field names or nesting that differ from the default `data` layout.
+
+---
+
+## 8. Verifying authenticity (secret key)
+
+When a **secret key** is configured:
+
+1. Read the **raw** request body bytes (UTF-8).
+2. Compute `HMAC-SHA256(body, secret_key)`.
+3. Encode as: `sha256=` + lowercase hex digest.
+4. Compare to header **`X-Webhook-Signature`** (constant-time compare).
+
+---
+
+## 9. Retries and monitoring
+
+- Failed deliveries (non-2xx or timeout) are retried according to the webhook's **retry** settings.
+- Inspect **webhook delivery logs** via the API (filters: webhook id, event type, status, date range) to debug failures.
+
+---
+
+## 10. Full event list (for DB / allow-lists)
+
+```text
+team.member.joined
+team.member.removed
+tournament.published
+tournament.updated
+tournament.player.joined
+tournament.team.joined
+round.created
+round.updated
+group.created
+group.updated
+tournament.announcement
+round.announcement
+group.announcement
+match.announcement
+id.pass.announcement
+participant.assigned.round
+participant.assigned.group
+participant.assigned.match
+participant.removed.round
+participant.removed.group
+participant.removed.match
+match.created
+match.updated
+```
+
+---
+
+## 11. Integration checklist
+
+1. Expose **HTTPS** POST endpoint; return **2xx** quickly.
+2. Create webhook in 16Arena; select event types from §10.
+3. Optional: set **secret key** and verify `X-Webhook-Signature`.
+4. Use **`event`** (or `event` + `data`) to route in your code.
+5. Use **`eventId` / `X-Webhook-Id`** for idempotency.
+6. Test with a real action (for example update match) and confirm delivery logs.
+
+---
+
+## 12. Document version
+
+- Aligned with **context-specific** participant events (`participant.assigned.*` / `participant.removed.*`).
+- Default payload mapping reflects `WebhookDispatcherService` + `WebhookPayloadDataDto` in the codebase.
+
+For API paths to create webhooks and fetch delivery logs, refer to your **OpenAPI / internal API docs** or any separate `WEBHOOK_CLIENT_GUIDE` if maintained.

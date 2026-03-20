@@ -101,6 +101,7 @@
           {
             "group": "Webhook events",
             "pages": [
+              "webhooks/developer-guide",
               "webhooks/events-and-payloads",
               "webhooks/signature-verification"
             ]

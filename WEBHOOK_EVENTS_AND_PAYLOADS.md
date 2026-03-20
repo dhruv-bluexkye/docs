@@ -129,9 +129,11 @@ Every webhook uses this top-level structure. Only `data` varies by event.
 
 ### 3. Tournament assignment events
 
-#### `participant.assigned`
+Assignment and removal use **context-specific** event names: `participant.assigned.round` / `.group` / `.match` and `participant.removed.round` / `.group` / `.match`.
 
-**When:** Participants are assigned to a round (e.g. bracket slots), group (e.g. league), or match.
+#### `participant.assigned.round`
+
+**When:** Participants are assigned to a round (e.g. bracket slots).
 
 **Payload `data`:**
 
@@ -139,15 +141,11 @@ Every webhook uses this top-level structure. Only `data` varies by event.
 |------------------|--------|--------------------------------------|
 | `tournamentId`   | string | UUID of the tournament               |
 | `roundId`        | string | UUID of the round                    |
-| `roundName`      | string | Round display name (if round/group context) |
-| `groupId`        | string | UUID of the group (if group context) |
-| `groupName`      | string | Group display name (if group context)|
-| `matchId`        | string | UUID of the match (if match context) |
-| `participantIds` | array  | List of UUIDs of assigned participants (not present in match context) |
+| `roundName`      | string | Round display name                   |
+| `participantIds` | array  | UUIDs of assigned participants       |
 | `participantType`| string | `"User"` or `"Team"`                 |
-| `status`         | string | Match type/status (if match context) |
 
-**Example `data` (Round context):**
+**Example `data`:**
 ```json
 {
   "tournamentId": "22222222-2222-2222-2222-222222222222",
@@ -161,13 +159,32 @@ Every webhook uses this top-level structure. Only `data` varies by event.
 }
 ```
 
-**Example `data` (Group context):**
+---
+
+#### `participant.assigned.group`
+
+**When:** Participants are assigned to a group (e.g. within a round).
+
+**Payload `data`:**
+
+| Field             | Type   | Description                          |
+|------------------|--------|--------------------------------------|
+| `tournamentId`   | string | UUID of the tournament               |
+| `roundId`        | string | UUID of the parent round             |
+| `roundName`      | string | Round display name                   |
+| `groupId`        | string | UUID of the group                    |
+| `groupName`      | string | Group display name                   |
+| `participantIds` | array  | UUIDs of assigned participants       |
+| `participantType`| string | `"User"` or `"Team"`                 |
+
+**Example `data`:**
 ```json
 {
   "tournamentId": "22222222-2222-2222-2222-222222222222",
   "groupId": "88888888-8888-8888-8888-888888888888",
   "groupName": "Group A",
   "roundId": "55555555-5555-5555-5555-555555555555",
+  "roundName": "Round 1",
   "participantIds": [
     "66666666-6666-6666-6666-666666666666"
   ],
@@ -175,7 +192,24 @@ Every webhook uses this top-level structure. Only `data` varies by event.
 }
 ```
 
-**Example `data` (Match context):**
+---
+
+#### `participant.assigned.match`
+
+**When:** Participants are assigned to a match.
+
+**Payload `data`:**
+
+| Field             | Type   | Description                          |
+|------------------|--------|--------------------------------------|
+| `tournamentId`   | string | UUID of the tournament               |
+| `roundId`        | string | UUID of the round (if any)           |
+| `matchId`        | string | UUID of the match                    |
+| `participantIds` | array  | UUIDs (may be omitted until the match tracks them) |
+| `participantType`| string | `"User"` or `"Team"`                 |
+| `status`         | string | Match type or status                 |
+
+**Example `data`:**
 ```json
 {
   "matchId": "33333333-3333-3333-3333-333333333333",
@@ -187,22 +221,66 @@ Every webhook uses this top-level structure. Only `data` varies by event.
 
 ---
 
-#### `participant.removed`
+#### `participant.removed.round`
 
-**When:** A participant is removed from a round/group.
+**When:** A participant is removed from a round.
+
+**Payload `data`:** Same shape as `participant.assigned.round`.
 
 **Example `data`:**
+```json
+{
+  "tournamentId": "22222222-2222-2222-2222-222222222222",
+  "roundId": "55555555-5555-5555-5555-555555555555",
+  "roundName": "Round 1",
+  "participantIds": [
+    "66666666-6666-6666-6666-666666666666"
+  ],
+  "participantType": "Team"
+}
+```
 
+---
+
+#### `participant.removed.group`
+
+**When:** A participant is removed from a group.
+
+**Payload `data`:** Same shape as `participant.assigned.group`.
+
+**Example `data`:**
 ```json
 {
   "tournamentId": "22222222-2222-2222-2222-222222222222",
   "groupId": "88888888-8888-8888-8888-888888888888",
   "groupName": "Group A",
   "roundId": "55555555-5555-5555-5555-555555555555",
+  "roundName": "Round 1",
   "participantIds": [
     "66666666-6666-6666-6666-666666666666"
   ],
   "participantType": "Team"
+}
+```
+
+---
+
+#### `participant.removed.match`
+
+**When:** A participant is removed from a match.
+
+**Payload `data`:** Same shape as `participant.assigned.match`.
+
+**Example `data`:**
+```json
+{
+  "tournamentId": "22222222-2222-2222-2222-222222222222",
+  "roundId": "55555555-5555-5555-5555-555555555555",
+  "matchId": "33333333-3333-3333-3333-333333333333",
+  "participantIds": [
+    "66666666-6666-6666-6666-666666666666"
+  ],
+  "participantType": "User"
 }
 ```
 
@@ -370,8 +448,12 @@ If none of `matchId`, `groupId`, or `roundId` are set, the announcement is **tou
 | `team.member.removed`                  | User removed from team          | teamId, teamName, userId, userName |
 | `tournament.player.joined`            | Player joined tournament         | tournamentId, participantId, participantType, registrationId, registrationStatus |
 | `tournament.team.joined`              | Team joined tournament           | tournamentId, participantId, participantType, registrationId, registrationStatus |
-| `participant.assigned`                 | Participants assigned to a target| tournamentId, roundId, roundName, groupId, groupName, matchId, participantIds, participantType, status |
-| `participant.removed`                  | Participant removed from a target| tournamentId, roundId, roundName, groupId, groupName, participantIds, participantType |
+| `participant.assigned.round`           | Assigned to a round              | tournamentId, roundId, roundName, participantIds, participantType |
+| `participant.assigned.group`           | Assigned to a group              | tournamentId, roundId, roundName, groupId, groupName, participantIds, participantType |
+| `participant.assigned.match`           | Assigned to a match              | tournamentId, roundId, matchId, participantIds, participantType, status |
+| `participant.removed.round`            | Removed from a round             | tournamentId, roundId, roundName, participantIds, participantType |
+| `participant.removed.group`            | Removed from a group             | tournamentId, roundId, roundName, groupId, groupName, participantIds, participantType |
+| `participant.removed.match`            | Removed from a match             | tournamentId, roundId, matchId, participantIds, participantType, status |
 | `match.created`                        | Match created                    | tournamentId, matchId, roundId, status |
 | `match.updated`                        | Match updated                    | tournamentId, matchId, roundId, status |
 | `tournament.published`                 | Tournament published             | tournamentId, tournamentName, status |
