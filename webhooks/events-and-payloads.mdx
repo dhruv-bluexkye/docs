@@ -64,6 +64,8 @@ Use the list below to jump to a specific event. Events are grouped by category; 
 
 **Tournaments**
 - [tournament.published](#tournamentpublished) — Tournament published
+- [tournament.rules.updated](#tournamentrulesupdated) — Tournament rules updated
+- [tournament.points.updated](#tournamentpointsupdated) — Tournament points system updated
 
 **Match announcements**
 - [id.pass.announcement](#idpassannouncement) — Room ID and credentials for a match
@@ -398,6 +400,50 @@ For `match.created`, `status` is currently the match type (e.g. `SingleEliminati
   "tournamentId": "22222222-2222-2222-2222-222222222222",
   "tournamentName": "Spring Championship",
   "status": "Published"
+}
+```
+
+### tournament.rules.updated
+
+**When:** Tournament **rules** are saved or changed.
+
+**Payload `data`:** Same shape as `tournament.published` — identifies the tournament and its current high-level status.
+
+| Field             | Type   | Description                    |
+|-------------------|--------|--------------------------------|
+| `tournamentId`    | string | UUID of the tournament         |
+| `tournamentName`  | string | Name of the tournament         |
+| `status`          | string | Tournament status (e.g. lifecycle) |
+
+**Example `data`:**
+
+```json
+{
+  "tournamentId": "94b24563-4816-451f-b7e7-1720e2a8e7c9",
+  "tournamentName": "Auto Test Tournament",
+  "status": "Upcoming"
+}
+```
+
+### tournament.points.updated
+
+**When:** The tournament **points** configuration is saved or changed.
+
+**Payload `data`:** Same fields as `tournament.rules.updated`.
+
+| Field             | Type   | Description                    |
+|-------------------|--------|--------------------------------|
+| `tournamentId`    | string | UUID of the tournament         |
+| `tournamentName`  | string | Name of the tournament         |
+| `status`          | string | Tournament status (e.g. lifecycle) |
+
+**Example `data`:**
+
+```json
+{
+  "tournamentId": "94b24563-4816-451f-b7e7-1720e2a8e7c9",
+  "tournamentName": "Auto Test Tournament",
+  "status": "Upcoming"
 }
 ```
 

@@ -122,6 +122,8 @@ Root `tournamentId` is usually not set for team events.
 |-------|----------------|----------------|
 | `tournament.published` | Tournament **created** (API still uses this event name) | `tournamentId`, `tournamentName`, `status` |
 | `tournament.updated` | Tournament updated | `tournamentId`, `tournamentName`, `status` |
+| `tournament.rules.updated` | Tournament rules saved or changed | `tournamentId`, `tournamentName`, `status` |
+| `tournament.points.updated` | Tournament points configuration saved or changed | `tournamentId`, `tournamentName`, `status` |
 | `tournament.player.joined` | Solo registration auto-approved | `tournamentId`, `participantId`, `participantType`, `registrationId`, `registrationStatus` + duplicate ids in `data` |
 | `tournament.team.joined` | Team registration auto-approved | Same shape as player joined |
 
@@ -197,6 +199,8 @@ team.member.joined
 team.member.removed
 tournament.published
 tournament.updated
+tournament.rules.updated
+tournament.points.updated
 tournament.player.joined
 tournament.team.joined
 round.created

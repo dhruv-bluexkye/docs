@@ -356,6 +356,54 @@ Assignment and removal use **context-specific** event names: `participant.assign
 
 ---
 
+#### `tournament.rules.updated`
+
+**When:** Tournament **rules** are saved or changed.
+
+**Payload `data`:** Same shape as `tournament.published` — identifies the tournament and its current high-level status.
+
+| Field             | Type   | Description                    |
+|-------------------|--------|--------------------------------|
+| `tournamentId`    | string | UUID of the tournament         |
+| `tournamentName`  | string | Name of the tournament         |
+| `status`          | string | Tournament status (e.g. lifecycle) |
+
+**Example `data`:**
+
+```json
+{
+  "tournamentId": "94b24563-4816-451f-b7e7-1720e2a8e7c9",
+  "tournamentName": "Auto Test Tournament",
+  "status": "Upcoming"
+}
+```
+
+---
+
+#### `tournament.points.updated`
+
+**When:** The tournament **points** configuration is saved or changed.
+
+**Payload `data`:** Same fields as `tournament.rules.updated`.
+
+| Field             | Type   | Description                    |
+|-------------------|--------|--------------------------------|
+| `tournamentId`    | string | UUID of the tournament         |
+| `tournamentName`  | string | Name of the tournament         |
+| `status`          | string | Tournament status (e.g. lifecycle) |
+
+**Example `data`:**
+
+```json
+{
+  "tournamentId": "94b24563-4816-451f-b7e7-1720e2a8e7c9",
+  "tournamentName": "Auto Test Tournament",
+  "status": "Upcoming"
+}
+```
+
+---
+
 ### 6. Announcement events (chat-based)
 
 Sent when an announcement message is posted to a tournament/round/group/match conversation.
@@ -457,6 +505,8 @@ If none of `matchId`, `groupId`, or `roundId` are set, the announcement is **tou
 | `match.created`                        | Match created                    | tournamentId, matchId, roundId, status |
 | `match.updated`                        | Match updated                    | tournamentId, matchId, roundId, status |
 | `tournament.published`                 | Tournament published             | tournamentId, tournamentName, status |
+| `tournament.rules.updated`           | Tournament rules updated         | tournamentId, tournamentName, status |
+| `tournament.points.updated`          | Tournament points updated        | tournamentId, tournamentName, status |
 | `id.pass.announcement`                 | Match ID and credentials         | tournamentId, messageContent, senderId, matchId |
 | `match.announcement`                   | Announcement to a match          | tournamentId, messageContent, senderId, matchId |
 | `group.announcement`                   | Announcement to a group          | tournamentId, messageContent, senderId, groupId |
